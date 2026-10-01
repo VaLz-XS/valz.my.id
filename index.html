@@ -1,692 +1,149 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>brat. | valz.my.id</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --brat: #8ACE00;
-      --brat-dim: #5a8800;
-      --bg: #060606;
-      --surface: #0e0e0e;
-      --border: #1e1e1e;
-    }
-
-    @keyframes glitch {
-      0%   { clip-path: inset(0 0 95% 0); transform: translate(-4px,0); }
-      10%  { clip-path: inset(30% 0 50% 0); transform: translate(4px,0); }
-      20%  { clip-path: inset(60% 0 20% 0); transform: translate(-2px,0); }
-      30%  { clip-path: inset(80% 0 5% 0);  transform: translate(3px,0); }
-      40%  { clip-path: inset(10% 0 70% 0); transform: translate(-3px,0);}
-      50%  { clip-path: inset(50% 0 30% 0); transform: translate(2px,0); }
-      60%  { clip-path: inset(20% 0 60% 0); transform: translate(-4px,0);}
-      70%  { clip-path: inset(75% 0 10% 0); transform: translate(4px,0); }
-      80%  { clip-path: inset(5% 0 85% 0);  transform: translate(-1px,0);}
-      100% { clip-path: inset(0 0 95% 0);   transform: translate(0,0); }
-    }
-
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
-      20%,24%,55% { opacity: 0.4; }
-    }
-
-    @keyframes scanline {
-      0%   { transform: translateY(-100%); }
-      100% { transform: translateY(100vh); }
-    }
-
-    @keyframes pulse-border {
-      0%,100% { box-shadow: 0 0 8px var(--brat), inset 0 0 8px rgba(138,206,0,0.05); }
-      50%      { box-shadow: 0 0 24px var(--brat), inset 0 0 16px rgba(138,206,0,0.1); }
-    }
-
-    html, body {
-      min-height: 100%;
-      background: var(--bg);
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-      overflow-x: hidden;
-    }
-
-    /* Scanline overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 3px,
-        rgba(0,0,0,0.18) 3px,
-        rgba(0,0,0,0.18) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* Moving scanline */
-    body::after {
-      content: '';
-      position: fixed;
-      left: 0; right: 0;
-      height: 120px;
-      background: linear-gradient(transparent, rgba(138,206,0,0.03), transparent);
-      animation: scanline 6s linear infinite;
-      pointer-events: none;
-      z-index: 998;
-    }
-
-    /* Title */
-    .title-wrap {
-      position: relative;
-      margin-bottom: 0.3rem;
-    }
-
-    h1 {
-      font-size: clamp(3rem, 14vw, 6rem);
-      font-weight: 700;
-      color: var(--brat);
-      letter-spacing: -3px;
-      filter: blur(0.5px);
-      text-align: center;
-      line-height: 1;
-      animation: flicker 5s infinite;
-      text-shadow: 0 0 20px rgba(138,206,0,0.5);
-    }
-
-    /* Glitch layers */
-    h1::before, h1::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      font-size: inherit;
-      font-weight: 700;
-      letter-spacing: -3px;
-      text-align: center;
-    }
-
-    h1::before {
-      color: #ff003c;
-      animation: glitch 3s infinite linear;
-      opacity: 0.6;
-    }
-
-    h1::after {
-      color: #00ffff;
-      animation: glitch 3s infinite linear reverse;
-      opacity: 0.4;
-    }
-
-    .sub {
-      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-      color: var(--brat-dim);
-      filter: blur(0.4px);
-      text-align: center;
-      margin-bottom: 2rem;
-      letter-spacing: 2px;
-      text-transform: lowercase;
-      opacity: 0.7;
-    }
-
-    /* Sticker preview */
-    .sticker-wrap {
-      background: #0a0a0a;
-      border: 2px solid var(--brat);
-      border-radius: 16px;
-      width: min(320px, 88vw);
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      animation: pulse-border 3s ease-in-out infinite;
-      overflow: hidden;
-    }
-
-    /* Corner marks */
-    .sticker-wrap::before {
-      content: '▮▮▮';
-      position: absolute;
-      top: 8px; left: 12px;
-      font-size: 0.5rem;
-      color: var(--brat);
-      opacity: 0.4;
-      letter-spacing: 2px;
-    }
-
-    .sticker-wrap::after {
-      content: 'REC ●';
-      position: absolute;
-      top: 8px; right: 12px;
-      font-size: 0.6rem;
-      color: #ff003c;
-      opacity: 0.6;
-      animation: flicker 2s infinite;
-    }
-
-    #sticker-text {
-      font-size: clamp(2rem, 10vw, 3.2rem);
-      font-weight: 700;
-      color: var(--brat);
-      filter: blur(0.7px);
-      letter-spacing: -1.5px;
-      text-align: center;
-      line-height: 1.15;
-      word-break: break-word;
-      text-shadow: 0 0 30px rgba(138,206,0,0.6), 2px 0 #ff003c, -2px 0 #00ffff;
-    }
-
-    /* Input */
-    .input-wrap {
-      width: min(320px, 88vw);
-      margin-bottom: 0.75rem;
-      position: relative;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      background: var(--surface);
-      border: 1.5px solid var(--brat-dim);
-      border-radius: 10px;
-      color: var(--brat);
-      outline: none;
-      letter-spacing: -0.3px;
-      caret-color: var(--brat);
-    }
-
-    input[type="text"]::placeholder { color: #3a3a3a; font-weight: 400; }
-    input[type="text"]:focus { border-color: var(--brat); box-shadow: 0 0 12px rgba(138,206,0,0.2); }
-
-    /* Buttons */
-    .btns {
-      display: flex;
-      gap: 0.6rem;
-      width: min(320px, 88vw);
-      margin-bottom: 1.5rem;
-    }
-
-    button {
-      flex: 1;
-      padding: 0.65rem 0;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.1s;
-      text-transform: lowercase;
-    }
-
-    button:active { transform: scale(0.96); }
-
-    .btn-save {
-      background: var(--brat);
-      color: #060606;
-      border: none;
-      box-shadow: 0 0 12px rgba(138,206,0,0.35);
-    }
-
-    .btn-save:hover { box-shadow: 0 0 24px rgba(138,206,0,0.55); }
-
-    .btn-reset {
-      background: transparent;
-      color: var(--brat-dim);
-      border: 1.5px solid var(--border);
-    }
-
-    .btn-reset:hover { border-color: var(--brat-dim); }
-
-    /* Presets */
-    .presets {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      justify-content: center;
-      width: min(360px, 92vw);
-      margin-bottom: 2rem;
-    }
-
-    .preset {
-      padding: 0.25rem 0.75rem;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border: 1px solid #222;
-      border-radius: 999px;
-      background: transparent;
-      color: #444;
-      cursor: pointer;
-      transition: all 0.15s;
-      text-transform: lowercase;
-      flex: none;
-    }
-
-    .preset:hover {
-      border-color: var(--brat-dim);
-      color: var(--brat);
-      box-shadow: 0 0 8px rgba(138,206,0,0.2);
-    }
-
-    footer {
-      font-size: 0.7rem;
-      color: #222;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
-    }
-
-    /* Music player */
-    .music-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: #0a0a0a;
-      border: 1px solid #1a1a1a;
-      border-radius: 999px;
-      padding: 0.45rem 1rem 0.45rem 0.5rem;
-      margin-bottom: 1.2rem;
-      width: min(320px, 88vw);
-      transition: border-color 0.2s;
-    }
-
-    .music-bar:hover { border-color: #2a2a2a; }
-    .music-bar.playing { border-color: var(--brat-dim); box-shadow: 0 0 12px rgba(138,206,0,0.1); }
-
-    .music-play-btn {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: var(--brat);
-      border: none;
-      color: #060606;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      flex: none;
-      transition: all 0.15s;
-      box-shadow: 0 0 10px rgba(138,206,0,0.3);
-    }
-
-    .music-play-btn:hover { box-shadow: 0 0 18px rgba(138,206,0,0.5); transform: scale(1.05); }
-    .music-play-btn:active { transform: scale(0.95); }
-
-    .music-info { flex: 1; overflow: hidden; }
-
-    .music-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #555;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .music-bar.playing .music-title { color: var(--brat-dim); }
-
-    .music-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 16px;
-      flex-shrink: 0;
-    }
-
-    .music-bars span {
-      display: block;
-      width: 3px;
-      background: #222;
-      border-radius: 2px;
-      transition: background 0.3s;
-    }
-
-    .music-bar.playing .music-bars span { background: var(--brat-dim); }
-
-    @keyframes bar1 { 0%,100%{height:4px} 50%{height:14px} }
-    @keyframes bar2 { 0%,100%{height:10px} 50%{height:4px} }
-    @keyframes bar3 { 0%,100%{height:6px} 50%{height:12px} }
-    @keyframes bar4 { 0%,100%{height:12px} 50%{height:6px} }
-
-    .music-bar.playing .music-bars span:nth-child(1) { animation: bar1 0.8s ease infinite; }
-    .music-bar.playing .music-bars span:nth-child(2) { animation: bar2 0.7s ease infinite; }
-    .music-bar.playing .music-bars span:nth-child(3) { animation: bar3 0.9s ease infinite; }
-    .music-bar.playing .music-bars span:nth-child(4) { animation: bar4 0.6s ease infinite; }
-
-    .btn-dev {
-      background: transparent;
-      color: #333;
-      border: 1px solid #1a1a1a;
-      border-radius: 999px;
-      padding: 0.3rem 1rem;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      text-transform: lowercase;
-      transition: all 0.2s;
-      flex: none;
-    }
-
-    .btn-dev:hover { color: var(--brat-dim); border-color: #333; }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s;
-    }
-
-    .modal-overlay.show { opacity: 1; pointer-events: all; }
-
-    .modal {
-      background: #0a0a0a;
-      border: 1.5px solid var(--brat);
-      border-radius: 20px;
-      padding: 2rem 1.5rem;
-      width: min(300px, 88vw);
-      text-align: center;
-      position: relative;
-      box-shadow: 0 0 40px rgba(138,206,0,0.2);
-      transform: scale(0.9);
-      transition: transform 0.25s;
-    }
-
-    .modal-overlay.show .modal { transform: scale(1); }
-
-    .modal-close {
-      position: absolute;
-      top: 12px; right: 14px;
-      background: none;
-      border: none;
-      color: #333;
-      font-size: 1.1rem;
-      cursor: pointer;
-      padding: 0;
-      flex: none;
-    }
-
-    .modal-close:hover { color: var(--brat); }
-
-    .avatar {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #0d1f00, #1a3d00);
-      border: 2px solid var(--brat);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      box-shadow: 0 0 20px rgba(138,206,0,0.3);
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--brat);
-      text-shadow: 0 0 12px rgba(138,206,0,0.8);
-      letter-spacing: -1px;
-    }
-
-    .dev-name {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--brat);
-      letter-spacing: -1px;
-      filter: blur(0.4px);
-      text-shadow: 0 0 16px rgba(138,206,0,0.5), 1px 0 #ff003c, -1px 0 #00ffff;
-      margin-bottom: 0.3rem;
-    }
-
-    .dev-role {
-      font-size: 0.75rem;
-      color: #333;
-      letter-spacing: 2px;
-      text-transform: lowercase;
-      margin-bottom: 1.2rem;
-    }
-
-    .dev-divider { border: none; border-top: 1px solid #1a1a1a; margin-bottom: 1.2rem; }
-
-    .dev-wa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      background: #0d1a00;
-      border: 1px solid var(--brat-dim);
-      border-radius: 10px;
-      padding: 0.6rem 1rem;
-      transition: all 0.15s;
-    }
-
-    .dev-wa:hover { background: #132200; box-shadow: 0 0 12px rgba(138,206,0,0.2); }
-
-    .dev-wa-text {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--brat);
-      letter-spacing: -0.3px;
-    }
-
-    canvas { display: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brat Generator</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; display:flex; justify-content:center; align-items:center;
+  background:#f4f4f4; font-family:Arial,Helvetica,sans-serif; color:#111;
+  padding:24px;
+}
+.wrap{width:min(920px,100%)}
+h1{font-size:34px;margin:0 0 8px;font-weight:800}
+.sub{margin:0 0 22px;color:#666}
+.card{
+  background:#fff;border:1px solid #ddd;border-radius:18px;padding:20px;
+  box-shadow:0 10px 35px rgba(0,0,0,.07);
+}
+textarea{
+  width:100%;min-height:110px;resize:vertical;border:1px solid #ccc;
+  border-radius:12px;padding:14px;font-size:18px;outline:none;
+}
+textarea:focus{border-color:#111}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{
+  border:0;border-radius:10px;padding:12px 18px;font-weight:700;
+  cursor:pointer;background:#111;color:#fff;font-size:15px;
+}
+button.secondary{background:#eee;color:#111}
+.preview{
+  margin-top:20px;display:flex;justify-content:center;align-items:center;
+  background:#eee;border-radius:14px;padding:20px;min-height:300px;
+}
+canvas{
+  width:min(500px,100%);height:auto;display:block;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+small{display:block;margin-top:12px;color:#777}
+@media(max-width:600px){
+  h1{font-size:28px}
+  .card{padding:15px}
+  .preview{padding:10px}
+}
+</style>
 </head>
 <body>
+<div class="wrap">
+  <h1>Brat Generator</h1>
+  <p class="sub">Bikin gambar teks bergaya Brat langsung dari browser.</p>
 
-  <div class="title-wrap">
-    <h1 data-text="brat.">brat.</h1>
-  </div>
-  <p class="sub">sticker generator ✦ valz.my.id</p>
+  <div class="card">
+    <textarea id="text" placeholder="Tulis sesuatu...">brat</textarea>
 
-  <div class="sticker-wrap">
-    <div id="sticker-text">brat.</div>
-  </div>
-
-  <div class="input-wrap">
-    <input type="text" id="input" placeholder="ketik sesuatu..." maxlength="40"/>
-  </div>
-
-  <div class="btns">
-    <button class="btn-reset" onclick="resetText()">reset</button>
-    <button class="btn-save" onclick="saveSticker()">simpan 💾</button>
-  </div>
-
-  <!-- Music Player -->
-  <div class="music-bar" id="musicBar">
-    <button class="music-play-btn" onclick="toggleMusic()" id="playBtn">▶</button>
-    <div class="music-info">
-      <div class="music-title" id="musicTitle">▮ tekan untuk play musik</div>
+    <div class="controls">
+      <button id="download">Download PNG</button>
+      <button class="secondary" id="clear">Clear</button>
     </div>
-    <div class="music-bars">
-      <span style="height:4px"></span>
-      <span style="height:10px"></span>
-      <span style="height:6px"></span>
-      <span style="height:12px"></span>
+
+    <div class="preview">
+      <canvas id="canvas" width="1080" height="1080"></canvas>
     </div>
+    <small>Semua proses dilakukan di browser kamu; tidak ada upload gambar ke server.</small>
   </div>
+</div>
 
-  <audio id="audio" loop>
-    <source src="music.m4a" type="audio/mp4">
-  </audio>
+<script>
+const textarea = document.getElementById('text');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
-  <div class="presets">
-    <button class="preset" onclick="setPreset('brat.')">brat.</button>
-    <button class="preset" onclick="setPreset('365')">365</button>
-    <button class="preset" onclick="setPreset('valz')">valz</button>
-    <button class="preset" onclick="setPreset('so what')">so what</button>
-    <button class="preset" onclick="setPreset('i did it')">i did it</button>
-    <button class="preset" onclick="setPreset('party girl')">party girl</button>
-    <button class="preset" onclick="setPreset('talk talk')">talk talk</button>
-    <button class="preset" onclick="setPreset('mean girls')">mean girls</button>
-  </div>
+function wrapText(text, maxWidth, fontSize) {
+  const words = text.trim().split(/\s+/);
+  const lines = [];
+  let line = "";
 
-  <canvas id="canvas"></canvas>
-  <footer>© 2026 valz.my.id</footer>
-  <button class="btn-dev" onclick="openDev()">developer ↗</button>
-
-  <!-- Developer Modal -->
-  <div class="modal-overlay" id="devModal" onclick="closeDev(event)">
-    <div class="modal">
-      <button class="modal-close" onclick="closeDevBtn()">✕</button>
-      <div class="avatar">VZ</div>
-      <div class="dev-name">VaLz</div>
-      <div class="dev-role">web developer ✦ designer</div>
-      <hr class="dev-divider"/>
-      <a class="dev-wa" href="https://wa.me/6283185947823" target="_blank">
-        <span style="font-size:1.1rem">📱</span>
-        <span class="dev-wa-text">+62 831-8594-7823</span>
-      </a>
-    </div>
-  </div>
-
-  <script>
-    const input = document.getElementById('input');
-    const stickerText = document.getElementById('sticker-text');
-
-    input.addEventListener('input', () => {
-      stickerText.textContent = input.value || 'brat.';
-    });
-
-    function setPreset(val) {
-      input.value = val;
-      stickerText.textContent = val;
+  for (const word of words) {
+    const test = line ? line + " " + word : word;
+    if (ctx.measureText(test).width <= maxWidth || !line) {
+      line = test;
+    } else {
+      lines.push(line);
+      line = word;
     }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
 
-    function resetText() {
-      input.value = '';
-      stickerText.textContent = 'brat.';
-    }
+function draw() {
+  const text = textarea.value || "";
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    function saveSticker() {
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
-      const size = 600;
-      canvas.width = size;
-      canvas.height = size;
+  // Brat-inspired pale green background
+  ctx.fillStyle = "#8ace00";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-      // Dark bg
-      ctx.fillStyle = '#060606';
-      ctx.fillRect(0, 0, size, size);
+  let fontSize = 125;
+  let lines;
 
-      // Border
-      ctx.strokeStyle = '#8ACE00';
-      ctx.lineWidth = 5;
-      roundRect(ctx, 10, 10, size-20, size-20, 36);
-      ctx.stroke();
+  while (fontSize > 35) {
+    ctx.font = `900 ${fontSize}px Arial, Helvetica, sans-serif`;
+    lines = wrapText(text, 920, fontSize);
+    if (lines.length <= 8) break;
+    fontSize -= 5;
+  }
 
-      // Glow border
-      ctx.shadowColor = '#8ACE00';
-      ctx.shadowBlur = 20;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
+  ctx.font = `900 ${fontSize}px Arial, Helvetica, sans-serif`;
+  ctx.fillStyle = "#000";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
 
-      // Text
-      const text = stickerText.textContent;
-      let fontSize = 150;
-      if (text.length > 8)  fontSize = 110;
-      if (text.length > 14) fontSize = 80;
-      if (text.length > 20) fontSize = 62;
+  const lineHeight = fontSize * 0.88;
+  const totalHeight = lines.length * lineHeight;
+  let y = (canvas.height - totalHeight) / 2 + lineHeight / 2;
 
-      ctx.font = `bold ${fontSize}px Arial`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+  for (const line of lines) {
+    ctx.fillText(line, canvas.width/2, y);
+    y += lineHeight;
+  }
+}
 
-      // Glitch shadow layers
-      ctx.fillStyle = '#ff003c';
-      ctx.globalAlpha = 0.5;
-      ctx.fillText(text, size/2 + 4, size/2);
+textarea.addEventListener("input", draw);
 
-      ctx.fillStyle = '#00ffff';
-      ctx.globalAlpha = 0.4;
-      ctx.fillText(text, size/2 - 4, size/2);
+document.getElementById("clear").addEventListener("click", () => {
+  textarea.value = "";
+  draw();
+  textarea.focus();
+});
 
-      // Main text glow
-      ctx.globalAlpha = 1;
-      ctx.shadowColor = '#8ACE00';
-      ctx.shadowBlur = 28;
-      ctx.fillStyle = '#8ACE00';
-      ctx.fillText(text, size/2, size/2);
-      ctx.shadowBlur = 0;
+document.getElementById("download").addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.download = "brat.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+});
 
-      // Download
-      const a = document.createElement('a');
-      a.download = 'brat-sticker.jpg';
-      a.href = canvas.toDataURL('image/jpeg', 0.95);
-      a.click();
-    }
-
-    const audio = document.getElementById('audio');
-    const playBtn = document.getElementById('playBtn');
-    const musicBar = document.getElementById('musicBar');
-    const musicTitle = document.getElementById('musicTitle');
-    let isPlaying = false;
-
-    function toggleMusic() {
-      if (!isPlaying) {
-        audio.play().then(() => {
-          isPlaying = true;
-          playBtn.textContent = '⏸';
-          musicBar.classList.add('playing');
-          musicTitle.textContent = '♪ now playing...';
-        }).catch(() => {
-          musicTitle.textContent = '⚠ gagal load musik';
-        });
-      } else {
-        audio.pause();
-        isPlaying = false;
-        playBtn.textContent = '▶';
-        musicBar.classList.remove('playing');
-        musicTitle.textContent = '▮ tekan untuk play musik';
-      }
-    }
-
-    function openDev() {
-      document.getElementById('devModal').classList.add('show');
-    }
-
-    function closeDevBtn() {
-      document.getElementById('devModal').classList.remove('show');
-    }
-
-    function closeDev(e) {
-      if (e.target.id === 'devModal') closeDevBtn();
-    }
-
-    function roundRect(ctx, x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x+r, y);
-      ctx.lineTo(x+w-r, y);
-      ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-      ctx.lineTo(x+w, y+h-r);
-      ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-      ctx.lineTo(x+r, y+h);
-      ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-      ctx.lineTo(x, y+r);
-      ctx.quadraticCurveTo(x, y, x+r, y);
-      ctx.closePath();
-    }
-  </script>
+draw();
+</script>
 </body>
 </html>
+'''
+
+path = Path("/mnt/data/brat-generator.html")
+path.write_text(html, encoding="utf-8")
+print(path)
