@@ -286,6 +286,208 @@
       font-size: 0.7rem;
       color: #222;
       letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+
+    /* Music player */
+    .music-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #0a0a0a;
+      border: 1px solid #1a1a1a;
+      border-radius: 999px;
+      padding: 0.45rem 1rem 0.45rem 0.5rem;
+      margin-bottom: 1.2rem;
+      width: min(320px, 88vw);
+      transition: border-color 0.2s;
+    }
+
+    .music-bar:hover { border-color: #2a2a2a; }
+    .music-bar.playing { border-color: var(--brat-dim); box-shadow: 0 0 12px rgba(138,206,0,0.1); }
+
+    .music-play-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--brat);
+      border: none;
+      color: #060606;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      flex: none;
+      transition: all 0.15s;
+      box-shadow: 0 0 10px rgba(138,206,0,0.3);
+    }
+
+    .music-play-btn:hover { box-shadow: 0 0 18px rgba(138,206,0,0.5); transform: scale(1.05); }
+    .music-play-btn:active { transform: scale(0.95); }
+
+    .music-info { flex: 1; overflow: hidden; }
+
+    .music-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #555;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-bar.playing .music-title { color: var(--brat-dim); }
+
+    .music-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .music-bars span {
+      display: block;
+      width: 3px;
+      background: #222;
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+
+    .music-bar.playing .music-bars span { background: var(--brat-dim); }
+
+    @keyframes bar1 { 0%,100%{height:4px} 50%{height:14px} }
+    @keyframes bar2 { 0%,100%{height:10px} 50%{height:4px} }
+    @keyframes bar3 { 0%,100%{height:6px} 50%{height:12px} }
+    @keyframes bar4 { 0%,100%{height:12px} 50%{height:6px} }
+
+    .music-bar.playing .music-bars span:nth-child(1) { animation: bar1 0.8s ease infinite; }
+    .music-bar.playing .music-bars span:nth-child(2) { animation: bar2 0.7s ease infinite; }
+    .music-bar.playing .music-bars span:nth-child(3) { animation: bar3 0.9s ease infinite; }
+    .music-bar.playing .music-bars span:nth-child(4) { animation: bar4 0.6s ease infinite; }
+
+    .btn-dev {
+      background: transparent;
+      color: #333;
+      border: 1px solid #1a1a1a;
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-transform: lowercase;
+      transition: all 0.2s;
+      flex: none;
+    }
+
+    .btn-dev:hover { color: var(--brat-dim); border-color: #333; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: #0a0a0a;
+      border: 1.5px solid var(--brat);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      width: min(300px, 88vw);
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 40px rgba(138,206,0,0.2);
+      transform: scale(0.9);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.show .modal { transform: scale(1); }
+
+    .modal-close {
+      position: absolute;
+      top: 12px; right: 14px;
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0;
+      flex: none;
+    }
+
+    .modal-close:hover { color: var(--brat); }
+
+    .avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d1f00, #1a3d00);
+      border: 2px solid var(--brat);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 0 20px rgba(138,206,0,0.3);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--brat);
+      text-shadow: 0 0 12px rgba(138,206,0,0.8);
+      letter-spacing: -1px;
+    }
+
+    .dev-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--brat);
+      letter-spacing: -1px;
+      filter: blur(0.4px);
+      text-shadow: 0 0 16px rgba(138,206,0,0.5), 1px 0 #ff003c, -1px 0 #00ffff;
+      margin-bottom: 0.3rem;
+    }
+
+    .dev-role {
+      font-size: 0.75rem;
+      color: #333;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .dev-divider { border: none; border-top: 1px solid #1a1a1a; margin-bottom: 1.2rem; }
+
+    .dev-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      background: #0d1a00;
+      border: 1px solid var(--brat-dim);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      transition: all 0.15s;
+    }
+
+    .dev-wa:hover { background: #132200; box-shadow: 0 0 12px rgba(138,206,0,0.2); }
+
+    .dev-wa-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--brat);
+      letter-spacing: -0.3px;
     }
 
     canvas { display: none; }
@@ -296,7 +498,7 @@
   <div class="title-wrap">
     <h1 data-text="brat.">brat.</h1>
   </div>
-  <p class="sub">sticker generator ✦ valz</p>
+  <p class="sub">sticker generator ✦ valz.my.id</p>
 
   <div class="sticker-wrap">
     <div id="sticker-text">brat.</div>
@@ -311,19 +513,53 @@
     <button class="btn-save" onclick="saveSticker()">simpan 💾</button>
   </div>
 
+  <!-- Music Player -->
+  <div class="music-bar" id="musicBar">
+    <button class="music-play-btn" onclick="toggleMusic()" id="playBtn">▶</button>
+    <div class="music-info">
+      <div class="music-title" id="musicTitle">▮ tekan untuk play musik</div>
+    </div>
+    <div class="music-bars">
+      <span style="height:4px"></span>
+      <span style="height:10px"></span>
+      <span style="height:6px"></span>
+      <span style="height:12px"></span>
+    </div>
+  </div>
+
+  <audio id="audio" loop>
+    <source src="music.m4a" type="audio/mp4">
+  </audio>
+
   <div class="presets">
     <button class="preset" onclick="setPreset('brat.')">brat.</button>
-    <button class="preset" onclick="setPreset('test')">test</button>
+    <button class="preset" onclick="setPreset('365')">365</button>
     <button class="preset" onclick="setPreset('valz')">valz</button>
-    <button class="preset" onclick="setPreset('awokawok')">awokawok</button>
-    <button class="preset" onclick="setPreset('pukimakkk')">pukimakkk</button>
-    <button class="preset" onclick="setPreset('apalah kontol')">apalah kontol</button>
-    <button class="preset" onclick="setPreset('https//wa.me/6283185947823')">https//wa.me/6283185947823</button>
-    <button class="preset" onclick="setPreset('wiwok detok')">wiwok detok</button>
+    <button class="preset" onclick="setPreset('so what')">so what</button>
+    <button class="preset" onclick="setPreset('i did it')">i did it</button>
+    <button class="preset" onclick="setPreset('party girl')">party girl</button>
+    <button class="preset" onclick="setPreset('talk talk')">talk talk</button>
+    <button class="preset" onclick="setPreset('mean girls')">mean girls</button>
   </div>
 
   <canvas id="canvas"></canvas>
-  <footer>© 2026 valz</footer>
+  <footer>© 2026 valz.my.id</footer>
+  <button class="btn-dev" onclick="openDev()">developer ↗</button>
+
+  <!-- Developer Modal -->
+  <div class="modal-overlay" id="devModal" onclick="closeDev(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeDevBtn()">✕</button>
+      <div class="avatar">VZ</div>
+      <div class="dev-name">VaLz</div>
+      <div class="dev-role">web developer ✦ designer</div>
+      <hr class="dev-divider"/>
+      <a class="dev-wa" href="https://wa.me/6283185947823" target="_blank">
+        <span style="font-size:1.1rem">📱</span>
+        <span class="dev-wa-text">+62 831-8594-7823</span>
+      </a>
+    </div>
+  </div>
 
   <script>
     const input = document.getElementById('input');
@@ -399,6 +635,43 @@
       a.download = 'brat-sticker.jpg';
       a.href = canvas.toDataURL('image/jpeg', 0.95);
       a.click();
+    }
+
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const musicBar = document.getElementById('musicBar');
+    const musicTitle = document.getElementById('musicTitle');
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          isPlaying = true;
+          playBtn.textContent = '⏸';
+          musicBar.classList.add('playing');
+          musicTitle.textContent = '♪ now playing...';
+        }).catch(() => {
+          musicTitle.textContent = '⚠ gagal load musik';
+        });
+      } else {
+        audio.pause();
+        isPlaying = false;
+        playBtn.textContent = '▶';
+        musicBar.classList.remove('playing');
+        musicTitle.textContent = '▮ tekan untuk play musik';
+      }
+    }
+
+    function openDev() {
+      document.getElementById('devModal').classList.add('show');
+    }
+
+    function closeDevBtn() {
+      document.getElementById('devModal').classList.remove('show');
+    }
+
+    function closeDev(e) {
+      if (e.target.id === 'devModal') closeDevBtn();
     }
 
     function roundRect(ctx, x, y, w, h, r) {
