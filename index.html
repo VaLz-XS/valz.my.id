@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 Game Zone - VaLz New Kids</title>
+<title>🎮 Game Zone by VaLz</title>
 <style>
   * {
     margin: 0;
@@ -25,6 +25,7 @@
     --cell-bg: #f0f0f0;
     --border-color: #ddd;
     --shadow: 0 20px 60px rgba(0,0,0,0.3);
+    --wa-color: #25D366;
   }
 
   [data-theme="dark"] {
@@ -45,6 +46,7 @@
     background: var(--bg-gradient);
     min-height: 100vh;
     padding: 20px;
+    padding-bottom: 120px;
     color: var(--text-color);
   }
 
@@ -65,7 +67,35 @@
     opacity: 0.9;
   }
 
-  /* ====== TOP CONTROLS ====== */
+  .developer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 25px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .developer-badge:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .developer-badge .dev-name {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+
   .top-controls {
     position: fixed;
     top: 20px;
@@ -96,11 +126,6 @@
     transform: scale(1.15);
   }
 
-  .top-btn.active {
-    background: var(--primary);
-    color: white;
-  }
-
   .top-btn.playing::after {
     content: '';
     position: absolute;
@@ -115,7 +140,6 @@
     100% { transform: scale(1.3); opacity: 0; }
   }
 
-  /* ====== PROFILE ====== */
   .profile-card {
     display: flex;
     align-items: center;
@@ -203,40 +227,6 @@
     font-size: 1.1rem;
   }
 
-  .avatar-picker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 15px 0;
-    justify-content: center;
-  }
-
-  .avatar-option {
-    width: 50px;
-    height: 50px;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    background: var(--secondary-bg);
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .avatar-option:hover {
-    transform: scale(1.1);
-    border-color: var(--primary);
-  }
-
-  .avatar-option.selected {
-    border-color: #ffd700;
-    background: var(--primary);
-    transform: scale(1.1);
-  }
-
-  /* ====== MUSIC PANEL ====== */
   .music-panel {
     background: var(--secondary-bg);
     padding: 15px 20px;
@@ -329,16 +319,6 @@
     cursor: pointer;
   }
 
-  .music-volume::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: var(--primary);
-    cursor: pointer;
-    border: none;
-  }
-
-  /* ====== MENU ====== */
   .menu {
     display: flex;
     flex-wrap: wrap;
@@ -424,7 +404,6 @@
 
   .btn-secondary { background: var(--text-muted); }
 
-  /* GAME 1 */
   .guess-input {
     display: flex;
     gap: 10px;
@@ -458,7 +437,6 @@
     font-size: 0.9rem;
   }
 
-  /* GAME 2 */
   .rps-choices {
     display: flex;
     justify-content: center;
@@ -489,7 +467,7 @@
     min-height: 40px;
   }
 
-  .rps-score, .score-row {
+  .rps-score {
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
@@ -499,7 +477,6 @@
     font-weight: bold;
   }
 
-  /* GAME 3 */
   .ttt-board {
     display: grid;
     grid-template-columns: repeat(3, 100px);
@@ -532,7 +509,6 @@
     color: var(--primary);
   }
 
-  /* GAME 4 */
   .memory-board {
     display: grid;
     grid-template-columns: repeat(4, 80px);
@@ -572,7 +548,6 @@
     color: var(--primary);
   }
 
-  /* GAME 5 */
   .quiz-question {
     font-size: 1.2rem;
     font-weight: bold;
@@ -607,7 +582,6 @@
   .quiz-option.correct { background: #4caf50; color: white; }
   .quiz-option.wrong { background: #f44336; color: white; }
 
-  /* GAME 6 */
   .dice-display {
     text-align: center;
     font-size: 8rem;
@@ -622,7 +596,6 @@
     75% { transform: rotate(15deg); }
   }
 
-  /* GAME 7 */
   .color-box {
     width: 200px;
     height: 200px;
@@ -656,7 +629,6 @@
   .color-option.correct { border-color: #4caf50; background: #e8f5e9; color: #333; }
   .color-option.wrong { border-color: #f44336; background: #ffebee; color: #333; }
 
-  /* GAME 8 */
   .simon-board {
     display: grid;
     grid-template-columns: repeat(2, 130px);
@@ -687,7 +659,6 @@
   .simon-yellow { background: #ffeb3b; color: #ffeb3b; }
   .simon-blue { background: #2196f3; color: #2196f3; }
 
-  /* GAME 9 */
   .click-area {
     position: relative;
     height: 400px;
@@ -713,7 +684,6 @@
     font-size: 1.5rem;
   }
 
-  /* GAME 10 */
   .hangman-word {
     text-align: center;
     font-size: 2.5rem;
@@ -766,7 +736,6 @@
   .letter-btn.correct { background: #4caf50; }
   .letter-btn.wrong { background: #f44336; }
 
-  /* LEADERBOARD */
   .leaderboard-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -851,7 +820,6 @@
     margin-top: 20px;
   }
 
-  /* MODAL */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -933,6 +901,162 @@
     margin: 0;
   }
 
+  .avatar-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+    justify-content: center;
+  }
+
+  .avatar-option {
+    width: 50px;
+    height: 50px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: var(--secondary-bg);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar-option:hover {
+    transform: scale(1.1);
+    border-color: var(--primary);
+  }
+
+  .avatar-option.selected {
+    border-color: #ffd700;
+    background: var(--primary);
+    transform: scale(1.1);
+  }
+
+  /* ====== FOOTER ====== */
+  .site-footer {
+    max-width: 850px;
+    margin: 30px auto 0;
+    padding: 25px 20px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    color: var(--text-color);
+  }
+
+  .footer-developer {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--text-muted);
+  }
+
+  .footer-developer .dev-name-big {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.4rem;
+    text-shadow: 0 0 15px rgba(118, 75, 162, 0.4);
+    letter-spacing: 1px;
+  }
+
+  .footer-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    background: var(--wa-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 10px 5px;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+  }
+
+  .footer-wa:hover {
+    background: #128C7E;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6);
+  }
+
+  .footer-wa svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
+  .footer-copy {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+
+  /* ====== FLOATING WA BUTTON ====== */
+  .wa-float {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: var(--wa-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+    text-decoration: none;
+    z-index: 90;
+    transition: all 0.3s;
+    animation: bounce 2s infinite;
+  }
+
+  .wa-float:hover {
+    background: #128C7E;
+    transform: scale(1.15) rotate(10deg);
+    animation: none;
+  }
+
+  .wa-float svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .wa-float::before {
+    content: 'Saluran WhatsApp';
+    position: absolute;
+    right: 75px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .wa-float:hover::before {
+    opacity: 1;
+    right: 70px;
+  }
+
   @media (max-width: 600px) {
     header h1 { font-size: 1.8rem; }
     .game-container { padding: 20px; }
@@ -948,12 +1072,15 @@
     .top-btn { width: 45px; height: 45px; font-size: 1.2rem; }
     .profile-avatar { width: 80px; height: 80px; font-size: 2.4rem; }
     .music-volume { width: 70px; }
+    .footer-developer .dev-name-big { font-size: 1.2rem; }
+    .wa-float { width: 55px; height: 55px; bottom: 20px; right: 20px; }
+    .wa-float svg { width: 28px; height: 28px; }
+    .wa-float::before { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- TOP CONTROLS -->
 <div class="top-controls">
   <button class="top-btn" id="musicToggle" title="Musik On/Off">🔇</button>
   <button class="top-btn" id="themeToggle" title="Ganti Tema">🌙</button>
@@ -962,9 +1089,11 @@
 <header>
   <h1>🎮 Game Zone</h1>
   <p>10 Games + Leaderboard + Profile + Musik</p>
+  <a href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank" rel="noopener" class="developer-badge">
+    👨‍💻 Developer: <span class="dev-name">VaLz</span> — 📢 Join Saluran WA
+  </a>
 </header>
 
-<!-- PROFILE SECTION -->
 <div class="game-container" style="margin-bottom: 20px;">
   <div class="profile-card">
     <div class="profile-avatar" id="profileAvatar" title="Klik untuk ganti avatar">😎</div>
@@ -982,19 +1111,16 @@
     </div>
   </div>
 
-  <!-- MUSIC PANEL -->
   <div class="music-panel">
     <div class="music-now">
       <div class="music-icon" id="musicIcon">🎵</div>
       <div class="music-info">
-        <div class="music-title" id="musicTitle">Musik tidak aktif</div>
-        <div class="music-subtitle" id="musicSubtitle">Klik tombol speaker untuk memulai</div>
+        <div class="music-title" id="musicTitle">Killswitch Lullaby</div>
+        <div class="music-subtitle" id="musicSubtitle">Flawed Mangoes — 124 BPM, E Minor</div>
       </div>
     </div>
     <div class="music-controls">
-      <button class="music-btn" id="prevTrack" title="Track Sebelumnya">⏮️</button>
       <button class="music-btn" id="playPause" title="Play/Pause">▶️</button>
-      <button class="music-btn" id="nextTrack" title="Track Selanjutnya">⏭️</button>
       <input type="range" class="music-volume" id="volumeSlider" min="0" max="100" value="30">
     </div>
   </div>
@@ -1179,7 +1305,25 @@
 
 </div>
 
-<!-- MODAL INPUT NAMA -->
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="footer-developer">
+    👨‍💻 Dibuat oleh <span class="dev-name-big">VaLz</span>
+  </div>
+  <a href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank" rel="noopener" class="footer-wa">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    📢 Join Saluran WhatsApp VaLz
+  </a>
+  <div class="footer-copy">
+    © 2024 Game Zone by VaLz — Semua Hak Dilindungi
+  </div>
+</footer>
+
+<!-- ============ FLOATING WA BUTTON ============ -->
+<a href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank" rel="noopener" class="wa-float" title="Join Saluran WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3>🎉 Skor Baru!</h3>
@@ -1194,7 +1338,6 @@
   </div>
 </div>
 
-<!-- MODAL EDIT PROFILE -->
 <div class="modal-overlay" id="profileModalOverlay">
   <div class="modal">
     <h3>✏️ Edit Profile</h3>
@@ -1246,66 +1389,27 @@ themeToggle.addEventListener('click', () => {
 applyTheme(currentTheme);
 
 // ==========================================
-// SISTEM MUSIK
+// MUSIK - KILLSWITCH LULLABY
 // ==========================================
-// Menggunakan Web Audio API untuk generate musik sederhana (tidak perlu file mp3)
 let audioCtx = null;
 let musicPlaying = false;
 let musicTimer = null;
-let currentTrackIndex = 0;
 let volume = 0.3;
 
-// Melodi lagu sederhana (nada dalam Hz)
-const tracks = [
-  {
-    name: 'Chill Vibes',
-    subtitle: 'Lo-fi santai',
-    notes: [
-      [261.63, 0.4], [329.63, 0.4], [392.00, 0.4], [329.63, 0.4],
-      [293.66, 0.4], [349.23, 0.4], [440.00, 0.4], [349.23, 0.4],
-      [261.63, 0.4], [329.63, 0.4], [392.00, 0.4], [523.25, 0.8],
-      [440.00, 0.4], [392.00, 0.4], [329.63, 0.8], [261.63, 0.8]
-    ]
-  },
-  {
-    name: 'Happy Day',
-    subtitle: 'Ceria & semangat',
-    notes: [
-      [523.25, 0.3], [523.25, 0.3], [587.33, 0.3], [659.25, 0.3],
-      [659.25, 0.3], [587.33, 0.3], [523.25, 0.3], [493.88, 0.3],
-      [440.00, 0.3], [440.00, 0.3], [493.88, 0.3], [523.25, 0.3],
-      [523.25, 0.5], [493.88, 0.2], [493.88, 0.8]
-    ]
-  },
-  {
-    name: 'Focus Mode',
-    subtitle: 'Fokus & tenang',
-    notes: [
-      [220.00, 0.6], [277.18, 0.6], [329.63, 0.6], [277.18, 0.6],
-      [246.94, 0.6], [329.63, 0.6], [415.30, 0.6], [329.63, 0.6],
-      [220.00, 0.6], [277.18, 0.6], [329.63, 0.6], [440.00, 0.6],
-      [415.30, 0.6], [369.99, 0.6], [329.63, 1.2]
-    ]
-  },
-  {
-    name: 'Retro Arcade',
-    subtitle: 'Gaya 8-bit',
-    notes: [
-      [392.00, 0.15], [392.00, 0.15], [392.00, 0.15], [523.25, 0.45],
-      [392.00, 0.15], [523.25, 0.15], [659.25, 0.6],
-      [349.23, 0.15], [349.23, 0.15], [349.23, 0.15], [466.16, 0.45],
-      [349.23, 0.15], [466.16, 0.15], [587.33, 0.6]
-    ]
-  },
-  {
-    name: 'Night Sky',
-    subtitle: 'Ambient malam',
-    notes: [
-      [174.61, 1.0], [220.00, 1.0], [261.63, 1.0], [329.63, 1.5],
-      [293.66, 1.0], [349.23, 1.0], [440.00, 1.0], [349.23, 1.5],
-      [261.63, 1.0], [329.63, 1.0], [392.00, 1.0], [523.25, 1.5]
-    ]
-  }
+const killswitchMelody = [
+  [261.63, 0.48], [329.63, 0.48], [392.00, 0.48], [493.88, 0.48],
+  [523.25, 0.48], [493.88, 0.48], [392.00, 0.48], [329.63, 0.48],
+  [329.63, 0.48], [392.00, 0.48], [493.88, 0.48], [392.00, 0.48],
+  [329.63, 0.48], [293.66, 0.48], [261.63, 0.48], [293.66, 0.48],
+  [293.66, 0.48], [369.99, 0.48], [440.00, 0.48], [369.99, 0.48],
+  [293.66, 0.48], [261.63, 0.48], [246.94, 0.48], [261.63, 0.48],
+  [261.63, 0.48], [329.63, 0.48], [392.00, 0.48], [493.88, 0.48],
+  [523.25, 0.48], [493.88, 0.48], [392.00, 0.48], [329.63, 0.48],
+  [329.63, 0.48], [392.00, 0.48], [493.88, 0.48], [392.00, 0.48],
+  [329.63, 0.48], [293.66, 0.48], [261.63, 0.48], [293.66, 0.48],
+  [293.66, 0.48], [369.99, 0.48], [440.00, 0.48], [369.99, 0.48],
+  [293.66, 0.48], [261.63, 0.48], [246.94, 0.48], [261.63, 0.48],
+  [261.63, 0.72], [329.63, 0.72], [392.00, 0.72], [523.25, 0.96]
 ];
 
 function initAudio() {
@@ -1319,52 +1423,31 @@ function initAudio() {
 
 function playNote(freq, duration, time) {
   if (!audioCtx) return;
-
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
-
-  osc.type = 'sine';
+  osc.type = 'triangle';
   osc.frequency.setValueAtTime(freq, time);
-
   gain.gain.setValueAtTime(0, time);
-  gain.gain.linearRampToValueAtTime(volume * 0.3, time + 0.05);
+  gain.gain.linearRampToValueAtTime(volume * 0.25, time + 0.05);
   gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-
   osc.connect(gain);
   gain.connect(audioCtx.destination);
-
   osc.start(time);
   osc.stop(time + duration);
 }
 
-function playTrack(trackIndex) {
+function playKillswitchLullaby() {
   if (!audioCtx) return;
-
-  const track = tracks[trackIndex];
   let totalTime = 0;
   const now = audioCtx.currentTime + 0.1;
-
-  // Hitung total durasi
-  track.notes.forEach(([freq, dur]) => {
-    totalTime += dur + 0.1;
-  });
-
-  // Jadwalkan semua nada
+  killswitchMelody.forEach(([freq, dur]) => { totalTime += dur + 0.05; });
   let offset = 0;
-  track.notes.forEach(([freq, dur]) => {
+  killswitchMelody.forEach(([freq, dur]) => {
     playNote(freq, dur, now + offset);
-    offset += dur + 0.1;
+    offset += dur + 0.05;
   });
-
-  // Update UI
-  document.getElementById('musicTitle').textContent = track.name;
-  document.getElementById('musicSubtitle').textContent = track.subtitle;
-
-  // Loop
   musicTimer = setTimeout(() => {
-    if (musicPlaying) {
-      playTrack(currentTrackIndex);
-    }
+    if (musicPlaying) playKillswitchLullaby();
   }, totalTime * 1000);
 }
 
@@ -1375,8 +1458,9 @@ function startMusic() {
   document.getElementById('musicToggle').classList.add('playing');
   document.getElementById('musicIcon').style.animation = 'spin 3s linear infinite';
   document.getElementById('playPause').textContent = '⏸️';
-
-  playTrack(currentTrackIndex);
+  document.getElementById('musicTitle').textContent = 'Killswitch Lullaby';
+  document.getElementById('musicSubtitle').textContent = 'Flawed Mangoes — 124 BPM, E Minor';
+  playKillswitchLullaby();
 }
 
 function stopMusic() {
@@ -1386,63 +1470,26 @@ function stopMusic() {
   document.getElementById('musicToggle').classList.remove('playing');
   document.getElementById('musicIcon').style.animation = 'none';
   document.getElementById('playPause').textContent = '▶️';
-  document.getElementById('musicTitle').textContent = 'Musik tidak aktif';
-  document.getElementById('musicSubtitle').textContent = 'Klik tombol speaker untuk memulai';
 }
 
 document.getElementById('musicToggle').addEventListener('click', () => {
-  if (musicPlaying) {
-    stopMusic();
-  } else {
-    startMusic();
-  }
+  if (musicPlaying) stopMusic(); else startMusic();
 });
-
 document.getElementById('playPause').addEventListener('click', () => {
-  if (musicPlaying) {
-    stopMusic();
-  } else {
-    startMusic();
-  }
+  if (musicPlaying) stopMusic(); else startMusic();
 });
-
-document.getElementById('prevTrack').addEventListener('click', () => {
-  currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-  if (musicPlaying) {
-    clearTimeout(musicTimer);
-    playTrack(currentTrackIndex);
-  } else {
-    document.getElementById('musicTitle').textContent = tracks[currentTrackIndex].name;
-    document.getElementById('musicSubtitle').textContent = tracks[currentTrackIndex].subtitle;
-  }
-});
-
-document.getElementById('nextTrack').addEventListener('click', () => {
-  currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-  if (musicPlaying) {
-    clearTimeout(musicTimer);
-    playTrack(currentTrackIndex);
-  } else {
-    document.getElementById('musicTitle').textContent = tracks[currentTrackIndex].name;
-    document.getElementById('musicSubtitle').textContent = tracks[currentTrackIndex].subtitle;
-  }
-});
-
 document.getElementById('volumeSlider').addEventListener('input', (e) => {
   volume = e.target.value / 100;
 });
 
 // ==========================================
-// SISTEM PROFILE
+// PROFILE
 // ==========================================
 const PROFILE_KEY = 'gamezone-profile';
 
 function getProfile() {
-  try {
-    return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}'); }
+  catch { return {}; }
 }
 
 function saveProfile(profile) {
@@ -1453,22 +1500,17 @@ function renderProfile() {
   const p = getProfile();
   const name = p.name || 'Pemain Baru';
   const avatar = p.avatar || '😎';
-
   document.getElementById('profileName').textContent = name;
   document.getElementById('profileAvatar').textContent = avatar;
   document.getElementById('modalName').value = name === 'Pemain Baru' ? '' : name;
 
-  // Statistik dari leaderboard
   const lb = getLeaderboard();
   const myScores = lb.filter(x => x.name === name);
-
   document.getElementById('statGames').textContent = myScores.length;
   document.getElementById('statBest').textContent = myScores.length > 0
-    ? Math.max(...myScores.map(s => s.score))
-    : 0;
+    ? Math.max(...myScores.map(s => s.score)) : 0;
   document.getElementById('statTotal').textContent = myScores.reduce((a, b) => a + b.score, 0);
 
-  // Subtitle bergabung
   if (p.joined) {
     document.getElementById('profileSubtitle').textContent = 'Bergabung: ' + p.joined;
   } else {
@@ -1481,16 +1523,12 @@ function renderProfile() {
   }
 }
 
-// Edit profile
 document.getElementById('editProfileBtn').addEventListener('click', () => {
   const p = getProfile();
   document.getElementById('profileNameInput').value = p.name || 'Pemain Baru';
-
-  // Highlight avatar terpilih
   document.querySelectorAll('.avatar-option').forEach(a => {
     a.classList.toggle('selected', a.dataset.avatar === (p.avatar || '😎'));
   });
-
   document.getElementById('profileModalOverlay').classList.add('active');
 });
 
@@ -1498,7 +1536,6 @@ document.getElementById('profileAvatar').addEventListener('click', () => {
   document.getElementById('editProfileBtn').click();
 });
 
-// Pilih avatar
 document.getElementById('avatarPicker').addEventListener('click', (e) => {
   const av = e.target.closest('.avatar-option');
   if (!av) return;
@@ -1506,17 +1543,14 @@ document.getElementById('avatarPicker').addEventListener('click', (e) => {
   av.classList.add('selected');
 });
 
-// Simpan profile
 document.getElementById('profileSave').addEventListener('click', () => {
   const name = document.getElementById('profileNameInput').value.trim() || 'Pemain Baru';
   const selected = document.querySelector('.avatar-option.selected');
   const avatar = selected ? selected.dataset.avatar : '😎';
-
   const p = getProfile();
   p.name = name;
   p.avatar = avatar;
   saveProfile(p);
-
   document.getElementById('profileModalOverlay').classList.remove('active');
   renderProfile();
   renderLeaderboard(currentLbFilter);
@@ -1533,48 +1567,33 @@ document.getElementById('profileCancel').addEventListener('click', () => {
 document.getElementById('menu').addEventListener('click', function(e) {
   const btn = e.target.closest('button');
   if (!btn || !btn.dataset.game) return;
-
   const id = btn.dataset.game;
-
   document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
   document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-
   const target = document.getElementById(id);
   if (target) {
     target.classList.add('active');
     btn.classList.add('active');
-
-    if (id === 'leaderboard') {
-      renderLeaderboard(currentLbFilter);
-    }
+    if (id === 'leaderboard') renderLeaderboard(currentLbFilter);
   }
 });
 
 // ==========================================
-// SISTEM LEADERBOARD
+// LEADERBOARD
 // ==========================================
 const LB_KEY = 'gamezone-leaderboard';
 let currentLbFilter = 'all';
 
 const gameNames = {
-  guess: '🔢 Tebak Angka',
-  rps: '✊ Suit',
-  ttt: '⭕ Tic Tac Toe',
-  memory: '🧠 Memory',
-  quiz: '❓ Kuis',
-  dice: '🎲 Dadu',
-  color: '🎨 Warna',
-  simon: '🔵 Simon',
-  click: '⚡ Klik Cepat',
+  guess: '🔢 Tebak Angka', rps: '✊ Suit', ttt: '⭕ Tic Tac Toe',
+  memory: '🧠 Memory', quiz: '❓ Kuis', dice: '🎲 Dadu',
+  color: '🎨 Warna', simon: '🔵 Simon', click: '⚡ Klik Cepat',
   hangman: '📝 Hangman'
 };
 
 function getLeaderboard() {
-  try {
-    return JSON.parse(localStorage.getItem(LB_KEY) || '[]');
-  } catch {
-    return [];
-  }
+  try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]'); }
+  catch { return []; }
 }
 
 function saveLeaderboard(data) {
@@ -1583,43 +1602,30 @@ function saveLeaderboard(data) {
 
 function submitScore(gameKey, score) {
   if (score <= 0) return;
-
   const p = getProfile();
   const overlay = document.getElementById('modalOverlay');
-  const modalGame = document.getElementById('modalGame');
-  const modalScore = document.getElementById('modalScore');
+  document.getElementById('modalGame').textContent = 'Game: ' + (gameNames[gameKey] || gameKey);
+  document.getElementById('modalScore').textContent = score;
   const nameInput = document.getElementById('modalName');
-
-  modalGame.textContent = 'Game: ' + (gameNames[gameKey] || gameKey);
-  modalScore.textContent = score;
-
   const defaultName = p.name && p.name !== 'Pemain Baru' ? p.name : (localStorage.getItem('gamezone-lastname') || '');
   nameInput.value = defaultName;
-
   overlay.classList.add('active');
   setTimeout(() => nameInput.focus(), 100);
 
   const saveHandler = () => {
     const name = (nameInput.value.trim() || 'Anonim').slice(0, 15);
     localStorage.setItem('gamezone-lastname', name);
-
-    // Update profile name juga
     const prof = getProfile();
     if (!prof.name || prof.name === 'Pemain Baru') {
       prof.name = name;
       saveProfile(prof);
     }
-
     const lb = getLeaderboard();
     lb.push({
-      name,
-      game: gameKey,
-      gameName: gameNames[gameKey] || gameKey,
-      score,
+      name, game: gameKey, gameName: gameNames[gameKey] || gameKey, score,
       date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: '2-digit' })
     });
     saveLeaderboard(lb);
-
     overlay.classList.remove('active');
     cleanup();
     renderProfile();
@@ -1650,23 +1656,18 @@ function submitScore(gameKey, score) {
 function renderLeaderboard(filter = 'all') {
   currentLbFilter = filter;
   const lb = getLeaderboard();
-
   document.querySelectorAll('.lb-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.lb === filter);
   });
-
   const filtered = filter === 'all' ? lb : lb.filter(x => x.game === filter);
   const sorted = [...filtered].sort((a, b) => b.score - a.score).slice(0, 50);
-
   const tbody = document.getElementById('lbBody');
-
   if (sorted.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" class="lb-empty">
       ${filter === 'all' ? 'Belum ada skor tersimpan. Mainkan game dulu! 🎮' : 'Belum ada skor untuk game ini.'}
     </td></tr>`;
     return;
   }
-
   tbody.innerHTML = sorted.map((entry, i) => {
     const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
@@ -1703,15 +1704,15 @@ document.getElementById('clearLB').addEventListener('click', () => {
   }
 });
 
-// Toast
 function showToast(msg) {
   const toast = document.createElement('div');
   toast.textContent = msg;
   toast.style.cssText = `
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
     background: var(--primary); color: white; padding: 12px 25px;
     border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     font-weight: bold; z-index: 300; animation: fadeIn 0.3s;
+    max-width: 90%; text-align: center;
   `;
   document.body.appendChild(toast);
   setTimeout(() => {
@@ -1734,15 +1735,12 @@ function checkGuess() {
   const result = document.getElementById('guessResult');
   const history = document.getElementById('guessHistory');
   const guess = parseInt(input.value);
-
   if (!guess || guess < 1 || guess > 100) {
     result.textContent = '⚠️ Masukkan angka 1-100!';
     result.style.color = '#f44336';
     return;
   }
-
   attempts.push(guess);
-
   if (guess === secretNumber) {
     const score = Math.max(100 - (attempts.length - 1) * 5, 10);
     result.textContent = `🎉 Benar! Angkanya ${secretNumber}! (${attempts.length} percobaan) | Skor: ${score}`;
@@ -1757,7 +1755,6 @@ function checkGuess() {
     result.textContent = '📉 Terlalu BESAR!';
     result.style.color = '#ff9800';
   }
-
   history.textContent = 'Riwayat: ' + attempts.join(', ');
   input.value = '';
   input.focus();
@@ -1792,7 +1789,6 @@ function playRPS(player) {
   const choices = ['batu', 'gunting', 'kertas'];
   const cpu = choices[Math.floor(Math.random() * 3)];
   const result = document.getElementById('rpsResult');
-
   let outcome;
   if (player === cpu) {
     outcome = 'seri'; tieScore++;
@@ -1805,19 +1801,15 @@ function playRPS(player) {
   } else {
     outcome = 'kalah'; cpuScore++;
   }
-
   const msg = outcome === 'menang' ? '🎉 Kamu MENANG!' :
               outcome === 'kalah' ? '😢 Kamu KALAH!' : '🤝 SERI!';
-
   result.innerHTML = `
     Kamu: ${emojiRPS[player]} vs Komputer: ${emojiRPS[cpu]}<br>
     <span style="color:${outcome === 'menang' ? '#4caf50' : outcome === 'kalah' ? '#f44336' : '#ff9800'}">${msg}</span>
   `;
-
   document.getElementById('playerScore').textContent = playerScore;
   document.getElementById('cpuScore').textContent = cpuScore;
   document.getElementById('tieScore').textContent = tieScore;
-
   if (!rpsSubmitted && (playerScore >= 3 || cpuScore >= 3)) {
     rpsSubmitted = true;
     const finalScore = playerScore * 100 - cpuScore * 50;
@@ -1863,7 +1855,6 @@ function playerMove(i) {
   if (tttBoard[i] || tttGameOver) return;
   tttBoard[i] = 'X';
   renderTTT();
-
   if (checkWinner('X')) {
     document.getElementById('tttStatus').textContent = '🎉 Kamu MENANG! +100 poin';
     tttGameOver = true;
@@ -1876,7 +1867,6 @@ function playerMove(i) {
     submitScore('ttt', 30);
     return;
   }
-
   document.getElementById('tttStatus').textContent = 'Komputer berpikir...';
   setTimeout(cpuMove, 500);
 }
@@ -1890,10 +1880,8 @@ function cpuMove() {
     const empty = tttBoard.map((v, i) => v === '' ? i : null).filter(v => v !== null);
     move = empty[Math.floor(Math.random() * empty.length)];
   }
-
   tttBoard[move] = 'O';
   renderTTT();
-
   if (checkWinner('O')) {
     document.getElementById('tttStatus').textContent = '😢 Komputer MENANG!';
     tttGameOver = true;
@@ -1955,7 +1943,6 @@ function initMemory() {
   memoryCards = [...memoryEmojis, ...memoryEmojis]
     .sort(() => Math.random() - 0.5)
     .map((emoji, i) => ({ emoji, id: i, matched: false }));
-
   memoryFlipped = [];
   memoryMatched = 0;
   memoryMoves = 0;
@@ -1985,15 +1972,12 @@ function flipMemory(i) {
   if (memoryFlipped.includes(i)) return;
   if (memoryCards[i].matched) return;
   if (memoryFlipped.length >= 2) return;
-
   memoryFlipped.push(i);
   renderMemory();
-
   if (memoryFlipped.length === 2) {
     memoryMoves++;
     document.getElementById('moves').textContent = memoryMoves;
     memoryLock = true;
-
     const [a, b] = memoryFlipped;
     if (memoryCards[a].emoji === memoryCards[b].emoji) {
       memoryCards[a].matched = true;
@@ -2003,7 +1987,6 @@ function flipMemory(i) {
       memoryFlipped = [];
       memoryLock = false;
       renderMemory();
-
       if (memoryMatched === 8) {
         const score = Math.max(1000 - memoryMoves * 10, 100);
         setTimeout(() => {
@@ -2061,12 +2044,10 @@ function loadQuizQuestion() {
     if (finalScore > 0) submitScore('quiz', finalScore);
     return;
   }
-
   quizAnswered = false;
   const q = quizQuestions[quizIndex];
   document.getElementById('quizNum').textContent = quizIndex + 1;
   document.getElementById('quizQuestion').textContent = q.q;
-
   const opts = document.getElementById('quizOptions');
   opts.innerHTML = '';
   q.o.forEach((opt, i) => {
@@ -2081,18 +2062,15 @@ function loadQuizQuestion() {
 function answerQuiz(i, btn) {
   if (quizAnswered) return;
   quizAnswered = true;
-
   const correct = quizQuestions[quizIndex].a;
   const allBtns = document.querySelectorAll('.quiz-option');
   allBtns[correct].classList.add('correct');
-
   if (i === correct) {
     quizScore++;
     document.getElementById('quizScore').textContent = quizScore;
   } else {
     btn.classList.add('wrong');
   }
-
   setTimeout(() => { quizIndex++; loadQuizQuestion(); }, 1200);
 }
 
@@ -2115,7 +2093,6 @@ function rollDice() {
   isRolling = true;
   const display = document.getElementById('diceDisplay');
   display.classList.add('rolling');
-
   let count = 0;
   const interval = setInterval(() => {
     display.textContent = diceEmojis[Math.floor(Math.random() * 6)];
@@ -2130,7 +2107,6 @@ function rollDice() {
       document.getElementById('diceTotal').textContent = diceTotal;
       document.getElementById('diceCount').textContent = diceCount;
       isRolling = false;
-
       if (diceCount === 5) {
         setTimeout(() => {
           submitScore('dice', diceTotal);
@@ -2156,16 +2132,11 @@ document.getElementById('resetDiceBtn').addEventListener('click', resetDice);
 // GAME 7: TEBAK WARNA
 // =========================
 const colorList = [
-  { name: 'Merah', hex: '#f44336' },
-  { name: 'Biru', hex: '#2196f3' },
-  { name: 'Hijau', hex: '#4caf50' },
-  { name: 'Kuning', hex: '#ffeb3b' },
-  { name: 'Ungu', hex: '#9c27b0' },
-  { name: 'Oranye', hex: '#ff9800' },
-  { name: 'Merah Muda', hex: '#e91e63' },
-  { name: 'Cyan', hex: '#00bcd4' },
-  { name: 'Coklat', hex: '#795548' },
-  { name: 'Abu-abu', hex: '#607d8b' },
+  { name: 'Merah', hex: '#f44336' }, { name: 'Biru', hex: '#2196f3' },
+  { name: 'Hijau', hex: '#4caf50' }, { name: 'Kuning', hex: '#ffeb3b' },
+  { name: 'Ungu', hex: '#9c27b0' }, { name: 'Oranye', hex: '#ff9800' },
+  { name: 'Merah Muda', hex: '#e91e63' }, { name: 'Cyan', hex: '#00bcd4' },
+  { name: 'Coklat', hex: '#795548' }, { name: 'Abu-abu', hex: '#607d8b' },
 ];
 
 let colorScore = 0;
@@ -2188,13 +2159,10 @@ function nextColorQuestion() {
     if (colorScore > 0) submitScore('color', colorScore * 10);
     return;
   }
-
   const shuffled = [...colorList].sort(() => Math.random() - 0.5);
   const options = shuffled.slice(0, 4);
   currentColor = options[Math.floor(Math.random() * 4)];
-
   document.getElementById('colorBox').style.background = currentColor.hex;
-
   const opts = document.getElementById('colorOptions');
   opts.innerHTML = '';
   options.sort(() => Math.random() - 0.5).forEach(color => {
@@ -2253,7 +2221,6 @@ function playSimonSequence() {
   simonPlaying = true;
   setSimonButtonsDisabled(true);
   let i = 0;
-
   const interval = setInterval(() => {
     if (i >= simonSequence.length) {
       clearInterval(interval);
@@ -2276,9 +2243,7 @@ function flashSimon(color) {
 function simonClick(color) {
   if (simonPlaying) return;
   if (simonSequence.length === 0) return;
-
   flashSimon(color);
-
   if (color === simonSequence[simonPlayerIndex]) {
     simonPlayerIndex++;
     if (simonPlayerIndex === simonSequence.length) {
@@ -2321,18 +2286,14 @@ function startClickGame() {
   clickGameRunning = true;
   document.getElementById('clickScore').textContent = '0';
   document.getElementById('clickTime').textContent = '30';
-
   const area = document.getElementById('clickArea');
   area.innerHTML = '';
   spawnTarget();
-
   clearInterval(clickTimer);
   clickTimer = setInterval(() => {
     clickTimeLeft--;
     document.getElementById('clickTime').textContent = clickTimeLeft;
-    if (clickTimeLeft <= 0) {
-      endClickGame();
-    }
+    if (clickTimeLeft <= 0) endClickGame();
   }, 1000);
 }
 
@@ -2340,28 +2301,21 @@ function spawnTarget() {
   const area = document.getElementById('clickArea');
   area.innerHTML = '';
   if (!clickGameRunning) return;
-
   const target = document.createElement('div');
   target.className = 'click-target';
   target.textContent = '🎯';
-
   const maxX = Math.max(area.clientWidth - 60, 10);
   const maxY = Math.max(area.clientHeight - 60, 10);
   target.style.left = Math.random() * maxX + 'px';
   target.style.top = Math.random() * maxY + 'px';
-
   target.addEventListener('click', () => {
     clickScore++;
     document.getElementById('clickScore').textContent = clickScore;
     spawnTarget();
   });
-
   area.appendChild(target);
-
   setTimeout(() => {
-    if (target.parentNode && clickGameRunning) {
-      spawnTarget();
-    }
+    if (target.parentNode && clickGameRunning) spawnTarget();
   }, 1500);
 }
 
@@ -2409,8 +2363,7 @@ function initHangman() {
 }
 
 function renderHangman() {
-  const display = document.getElementById('hangmanWord');
-  display.textContent = hangmanWord.split('').map(l =>
+  document.getElementById('hangmanWord').textContent = hangmanWord.split('').map(l =>
     hangmanGuessed.includes(l) ? l : '_'
   ).join(' ');
 }
@@ -2424,16 +2377,11 @@ function renderHangmanLetters() {
     btn.className = 'letter-btn';
     btn.textContent = letter;
     btn.dataset.letter = letter;
-
     if (hangmanGuessed.includes(letter)) {
       btn.disabled = true;
-      if (hangmanWord.includes(letter)) {
-        btn.classList.add('correct');
-      } else {
-        btn.classList.add('wrong');
-      }
+      if (hangmanWord.includes(letter)) btn.classList.add('correct');
+      else btn.classList.add('wrong');
     }
-
     btn.addEventListener('click', () => guessLetter(letter, btn));
     container.appendChild(btn);
   }
@@ -2443,7 +2391,6 @@ function guessLetter(letter, btn) {
   if (hangmanFinished) return;
   if (hangmanGuessed.includes(letter)) return;
   hangmanGuessed.push(letter);
-
   if (hangmanWord.includes(letter)) {
     btn.classList.add('correct');
   } else {
@@ -2452,10 +2399,8 @@ function guessLetter(letter, btn) {
     document.getElementById('hangmanTries').textContent = hangmanTries;
     document.getElementById('hangmanLives').textContent = '❤️'.repeat(Math.max(hangmanTries, 0));
   }
-
   btn.disabled = true;
   renderHangman();
-
   const won = hangmanWord.split('').every(l => hangmanGuessed.includes(l));
   if (won) {
     hangmanFinished = true;
@@ -2467,7 +2412,6 @@ function guessLetter(letter, btn) {
     disableAllLetters();
     return;
   }
-
   if (hangmanTries <= 0) {
     hangmanFinished = true;
     setTimeout(() => alert(`💀 Game Over! Kata yang benar: ${hangmanWord}`), 300);
@@ -2491,7 +2435,8 @@ initColorGame();
 initHangman();
 renderProfile();
 
-console.log('✅ Semua fitur berhasil dimuat: Games + Leaderboard + Profile + Musik + Tema');
+console.log('✅ Game Zone by VaLz siap!');
+console.log('📢 Join Saluran WhatsApp: https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y');
 </script>
 
 </body>
