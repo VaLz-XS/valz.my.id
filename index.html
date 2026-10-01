@@ -1,209 +1,418 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>valz.my.id</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>brat. | valz.my.id</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --pink:   #FF3CAC;
-      --purple: #784BA0;
-      --blue:   #2B86C5;
-      --yellow: #FFD93D;
-      --coral:  #FF6B6B;
-      --mint:   #6BCB77;
+      --brat: #8ACE00;
+      --brat-dim: #5a8800;
+      --bg: #060606;
+      --surface: #0e0e0e;
+      --border: #1e1e1e;
+    }
+
+    @keyframes glitch {
+      0%   { clip-path: inset(0 0 95% 0); transform: translate(-4px,0); }
+      10%  { clip-path: inset(30% 0 50% 0); transform: translate(4px,0); }
+      20%  { clip-path: inset(60% 0 20% 0); transform: translate(-2px,0); }
+      30%  { clip-path: inset(80% 0 5% 0);  transform: translate(3px,0); }
+      40%  { clip-path: inset(10% 0 70% 0); transform: translate(-3px,0);}
+      50%  { clip-path: inset(50% 0 30% 0); transform: translate(2px,0); }
+      60%  { clip-path: inset(20% 0 60% 0); transform: translate(-4px,0);}
+      70%  { clip-path: inset(75% 0 10% 0); transform: translate(4px,0); }
+      80%  { clip-path: inset(5% 0 85% 0);  transform: translate(-1px,0);}
+      100% { clip-path: inset(0 0 95% 0);   transform: translate(0,0); }
+    }
+
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+      20%,24%,55% { opacity: 0.4; }
+    }
+
+    @keyframes scanline {
+      0%   { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    @keyframes pulse-border {
+      0%,100% { box-shadow: 0 0 8px var(--brat), inset 0 0 8px rgba(138,206,0,0.05); }
+      50%      { box-shadow: 0 0 24px var(--brat), inset 0 0 16px rgba(138,206,0,0.1); }
     }
 
     html, body {
       min-height: 100%;
-      font-family: 'Nunito', sans-serif;
-      overflow-x: hidden;
-    }
-
-    body {
-      background: linear-gradient(135deg, #FF3CAC, #784BA0, #2B86C5);
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
+      background: var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       padding: 2rem 1rem;
+      overflow-x: hidden;
     }
 
-    @keyframes gradientShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Floating bubbles */
-    .bubbles {
+    /* Scanline overlay */
+    body::before {
+      content: '';
       position: fixed;
       inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.18) 3px,
+        rgba(0,0,0,0.18) 4px
+      );
       pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
+      z-index: 999;
     }
 
-    .bubble {
-      position: absolute;
-      bottom: -120px;
-      border-radius: 50%;
-      opacity: 0.25;
-      animation: rise linear infinite;
+    /* Moving scanline */
+    body::after {
+      content: '';
+      position: fixed;
+      left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(transparent, rgba(138,206,0,0.03), transparent);
+      animation: scanline 6s linear infinite;
+      pointer-events: none;
+      z-index: 998;
     }
 
-    @keyframes rise {
-      to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
-    }
-
-    /* Card */
-    .card {
+    /* Title */
+    .title-wrap {
       position: relative;
-      z-index: 1;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 2px solid rgba(255,255,255,0.35);
-      border-radius: 32px;
-      padding: 3rem 2.5rem;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
-    }
-
-    .emoji-ring {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      display: block;
-      animation: spin 6s linear infinite;
-    }
-
-    @keyframes spin {
-      0%   { transform: rotate(0deg) scale(1); }
-      50%  { transform: rotate(180deg) scale(1.15); }
-      100% { transform: rotate(360deg) scale(1); }
+      margin-bottom: 0.3rem;
     }
 
     h1 {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 8vw, 3rem);
-      color: #fff;
-      text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
-      margin-bottom: 0.5rem;
-      letter-spacing: 1px;
+      font-size: clamp(3rem, 14vw, 6rem);
+      font-weight: 700;
+      color: var(--brat);
+      letter-spacing: -3px;
+      filter: blur(0.5px);
+      text-align: center;
+      line-height: 1;
+      animation: flicker 5s infinite;
+      text-shadow: 0 0 20px rgba(138,206,0,0.5);
     }
 
-    .tagline {
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.85);
+    /* Glitch layers */
+    h1::before, h1::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      font-size: inherit;
       font-weight: 700;
+      letter-spacing: -3px;
+      text-align: center;
+    }
+
+    h1::before {
+      color: #ff003c;
+      animation: glitch 3s infinite linear;
+      opacity: 0.6;
+    }
+
+    h1::after {
+      color: #00ffff;
+      animation: glitch 3s infinite linear reverse;
+      opacity: 0.4;
+    }
+
+    .sub {
+      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+      color: var(--brat-dim);
+      filter: blur(0.4px);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      opacity: 0.7;
+    }
+
+    /* Sticker preview */
+    .sticker-wrap {
+      background: #0a0a0a;
+      border: 2px solid var(--brat);
+      border-radius: 16px;
+      width: min(320px, 88vw);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      animation: pulse-border 3s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    /* Corner marks */
+    .sticker-wrap::before {
+      content: '▮▮▮';
+      position: absolute;
+      top: 8px; left: 12px;
+      font-size: 0.5rem;
+      color: var(--brat);
+      opacity: 0.4;
+      letter-spacing: 2px;
+    }
+
+    .sticker-wrap::after {
+      content: 'REC ●';
+      position: absolute;
+      top: 8px; right: 12px;
+      font-size: 0.6rem;
+      color: #ff003c;
+      opacity: 0.6;
+      animation: flicker 2s infinite;
+    }
+
+    #sticker-text {
+      font-size: clamp(2rem, 10vw, 3.2rem);
+      font-weight: 700;
+      color: var(--brat);
+      filter: blur(0.7px);
+      letter-spacing: -1.5px;
+      text-align: center;
+      line-height: 1.15;
+      word-break: break-word;
+      text-shadow: 0 0 30px rgba(138,206,0,0.6), 2px 0 #ff003c, -2px 0 #00ffff;
+    }
+
+    /* Input */
+    .input-wrap {
+      width: min(320px, 88vw);
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: var(--surface);
+      border: 1.5px solid var(--brat-dim);
+      border-radius: 10px;
+      color: var(--brat);
+      outline: none;
+      letter-spacing: -0.3px;
+      caret-color: var(--brat);
+    }
+
+    input[type="text"]::placeholder { color: #3a3a3a; font-weight: 400; }
+    input[type="text"]:focus { border-color: var(--brat); box-shadow: 0 0 12px rgba(138,206,0,0.2); }
+
+    /* Buttons */
+    .btns {
+      display: flex;
+      gap: 0.6rem;
+      width: min(320px, 88vw);
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 0.65rem 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      text-transform: lowercase;
+    }
+
+    button:active { transform: scale(0.96); }
+
+    .btn-save {
+      background: var(--brat);
+      color: #060606;
+      border: none;
+      box-shadow: 0 0 12px rgba(138,206,0,0.35);
+    }
+
+    .btn-save:hover { box-shadow: 0 0 24px rgba(138,206,0,0.55); }
+
+    .btn-reset {
+      background: transparent;
+      color: var(--brat-dim);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-reset:hover { border-color: var(--brat-dim); }
+
+    /* Presets */
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      width: min(360px, 92vw);
       margin-bottom: 2rem;
     }
 
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .tag {
-      padding: 0.35rem 1rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
+    .preset {
+      padding: 0.25rem 0.75rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.75rem;
       font-weight: 700;
-      color: #fff;
-      letter-spacing: 0.3px;
-    }
-
-    .tag:nth-child(1) { background: var(--pink); }
-    .tag:nth-child(2) { background: var(--mint); }
-    .tag:nth-child(3) { background: var(--yellow); color: #333; }
-    .tag:nth-child(4) { background: var(--coral); }
-    .tag:nth-child(5) { background: var(--purple); }
-
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 2.2rem;
-      background: var(--yellow);
-      color: #333;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
+      border: 1px solid #222;
       border-radius: 999px;
-      text-decoration: none;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-      transition: transform 0.15s, box-shadow 0.15s;
+      background: transparent;
+      color: #444;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: lowercase;
+      flex: none;
     }
 
-    .btn:hover, .btn:focus {
-      transform: translateY(-3px);
-      box-shadow: 0 7px 0 rgba(0,0,0,0.15);
+    .preset:hover {
+      border-color: var(--brat-dim);
+      color: var(--brat);
+      box-shadow: 0 0 8px rgba(138,206,0,0.2);
     }
 
-    .btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+    footer {
+      font-size: 0.7rem;
+      color: #222;
+      letter-spacing: 1px;
     }
 
-    .footer {
-      position: relative;
-      z-index: 1;
-      margin-top: 1.5rem;
-      color: rgba(255,255,255,0.6);
-      font-size: 0.8rem;
-    }
+    canvas { display: none; }
   </style>
 </head>
 <body>
 
-  <!-- Bubbles background -->
-  <div class="bubbles" id="bubbles"></div>
+  <div class="title-wrap">
+    <h1 data-text="brat.">brat.</h1>
+  </div>
+  <p class="sub">sticker generator ✦ valz.my.id</p>
 
-  <!-- Main card -->
-  <div class="card">
-    <span class="emoji-ring">🌈</span>
-    <h1>Halo, Selamat Datang!</h1>
-    <p class="tagline">Website ini sedang dalam pengerjaan ✨</p>
-
-    <div class="tags">
-      <span class="tag">🎨 Creative</span>
-      <span class="tag">🌟 Fun</span>
-      <span class="tag">⚡ Energic</span>
-      <span class="tag">💖 Colorful</span>
-      <span class="tag">🚀 Coming Soon</span>
-    </div>
-
-    <a href="#" class="btn">🎉 Stay Tuned!</a>
+  <div class="sticker-wrap">
+    <div id="sticker-text">brat.</div>
   </div>
 
-  <p class="footer">© 2026 valz.my.id — Made with 💜</p>
+  <div class="input-wrap">
+    <input type="text" id="input" placeholder="ketik sesuatu..." maxlength="40"/>
+  </div>
+
+  <div class="btns">
+    <button class="btn-reset" onclick="resetText()">reset</button>
+    <button class="btn-save" onclick="saveSticker()">simpan 💾</button>
+  </div>
+
+  <div class="presets">
+    <button class="preset" onclick="setPreset('brat.')">brat.</button>
+    <button class="preset" onclick="setPreset('365')">365</button>
+    <button class="preset" onclick="setPreset('valz')">valz</button>
+    <button class="preset" onclick="setPreset('so what')">so what</button>
+    <button class="preset" onclick="setPreset('i did it')">i did it</button>
+    <button class="preset" onclick="setPreset('party girl')">party girl</button>
+    <button class="preset" onclick="setPreset('talk talk')">talk talk</button>
+    <button class="preset" onclick="setPreset('mean girls')">mean girls</button>
+  </div>
+
+  <canvas id="canvas"></canvas>
+  <footer>© 2026 valz.my.id</footer>
 
   <script>
-    // Generate floating bubbles
-    const colors = ['#FF3CAC','#FFD93D','#6BCB77','#2B86C5','#FF6B6B','#784BA0'];
-    const container = document.getElementById('bubbles');
+    const input = document.getElementById('input');
+    const stickerText = document.getElementById('sticker-text');
 
-    for (let i = 0; i < 18; i++) {
-      const b = document.createElement('div');
-      b.className = 'bubble';
-      const size = 30 + Math.random() * 80;
-      b.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${Math.random() * 100}%;
-        background: ${colors[Math.floor(Math.random() * colors.length)]};
-        animation-duration: ${6 + Math.random() * 10}s;
-        animation-delay: ${Math.random() * 8}s;
-      `;
-      container.appendChild(b);
+    input.addEventListener('input', () => {
+      stickerText.textContent = input.value || 'brat.';
+    });
+
+    function setPreset(val) {
+      input.value = val;
+      stickerText.textContent = val;
+    }
+
+    function resetText() {
+      input.value = '';
+      stickerText.textContent = 'brat.';
+    }
+
+    function saveSticker() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const size = 600;
+      canvas.width = size;
+      canvas.height = size;
+
+      // Dark bg
+      ctx.fillStyle = '#060606';
+      ctx.fillRect(0, 0, size, size);
+
+      // Border
+      ctx.strokeStyle = '#8ACE00';
+      ctx.lineWidth = 5;
+      roundRect(ctx, 10, 10, size-20, size-20, 36);
+      ctx.stroke();
+
+      // Glow border
+      ctx.shadowColor = '#8ACE00';
+      ctx.shadowBlur = 20;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Text
+      const text = stickerText.textContent;
+      let fontSize = 150;
+      if (text.length > 8)  fontSize = 110;
+      if (text.length > 14) fontSize = 80;
+      if (text.length > 20) fontSize = 62;
+
+      ctx.font = `bold ${fontSize}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Glitch shadow layers
+      ctx.fillStyle = '#ff003c';
+      ctx.globalAlpha = 0.5;
+      ctx.fillText(text, size/2 + 4, size/2);
+
+      ctx.fillStyle = '#00ffff';
+      ctx.globalAlpha = 0.4;
+      ctx.fillText(text, size/2 - 4, size/2);
+
+      // Main text glow
+      ctx.globalAlpha = 1;
+      ctx.shadowColor = '#8ACE00';
+      ctx.shadowBlur = 28;
+      ctx.fillStyle = '#8ACE00';
+      ctx.fillText(text, size/2, size/2);
+      ctx.shadowBlur = 0;
+
+      // Download
+      const a = document.createElement('a');
+      a.download = 'brat-sticker.jpg';
+      a.href = canvas.toDataURL('image/jpeg', 0.95);
+      a.click();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.lineTo(x+w-r, y);
+      ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+      ctx.lineTo(x+w, y+h-r);
+      ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+      ctx.lineTo(x+r, y+h);
+      ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+      ctx.lineTo(x, y+r);
+      ctx.quadraticCurveTo(x, y, x+r, y);
+      ctx.closePath();
     }
   </script>
 </body>
