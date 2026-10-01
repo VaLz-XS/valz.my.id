@@ -1,5 +1,7 @@
 from pathlib import Path
 
+path = Path("/mnt/data/index.html")
+
 html = r'''<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -10,87 +12,40 @@ html = r'''<!DOCTYPE html>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{
-  min-height:100vh;
-  background:#f4f4f5;
-  color:#111;
-  font-family:Arial,Helvetica,sans-serif;
-}
-.app{width:min(960px,100%);margin:auto;padding:18px 16px 34px}
-.nav{
-  height:54px;display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:24px
-}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px}
-.logo{
-  width:38px;height:38px;border-radius:11px;background:#111;color:#fff;
-  display:grid;place-items:center;font-weight:900
-}
-.theme{
-  width:42px;height:42px;border:1px solid #ddd;border-radius:12px;
-  background:#fff;color:#111;font-size:18px;cursor:pointer
-}
-.hero{margin-bottom:22px}
-.badge{
-  display:inline-block;background:#111;color:#fff;border-radius:999px;
-  padding:6px 10px;font-size:11px;font-weight:800;margin-bottom:9px
-}
-h1{font-size:clamp(35px,8vw,58px);line-height:1;letter-spacing:-2.5px;margin:0 0 10px}
-.hero p{color:#666;line-height:1.5;margin:0;max-width:650px}
-.layout{
-  display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px;align-items:start
-}
-.card{
-  background:#fff;border:1px solid #ddd;border-radius:22px;padding:16px;
-  box-shadow:0 12px 35px rgba(0,0,0,.07)
-}
+body{min-height:100vh;background:#f4f4f5;color:#111;font-family:Arial,Helvetica,sans-serif}
+.app{width:min(960px,100%);margin:auto;padding:16px 14px 32px}
+.nav{height:52px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900}
+.logo{width:38px;height:38px;border-radius:11px;background:#111;color:#fff;display:grid;place-items:center}
+.theme{width:42px;height:42px;border:1px solid #ddd;border-radius:12px;background:#fff;color:#111;font-size:18px}
+.hero{margin-bottom:20px}
+.badge{display:inline-block;background:#111;color:#fff;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;margin-bottom:9px}
+h1{font-size:clamp(36px,8vw,58px);line-height:1;letter-spacing:-2.5px;margin:0 0 10px}
+.hero p{color:#666;line-height:1.5;margin:0;max-width:680px}
+.layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px;align-items:start}
+.card{background:#fff;border:1px solid #ddd;border-radius:22px;padding:16px;box-shadow:0 12px 35px rgba(0,0,0,.07)}
 .preview-card{padding:13px}
-.preview-head{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:3px 4px 12px;font-size:13px;font-weight:800
-}
+.preview-head{display:flex;justify-content:space-between;padding:3px 4px 12px;font-size:13px;font-weight:800}
 .live{color:#888}
-.stage{
-  width:100%;aspect-ratio:1/1;border-radius:15px;overflow:hidden;
-  background:#fff;border:1px solid #e5e5e5
-}
+.stage{width:100%;aspect-ratio:1/1;border-radius:15px;overflow:hidden;background:#fff;border:1px solid #e5e5e5}
 canvas{width:100%;height:100%;display:block}
 .hint{text-align:center;color:#888;font-size:11px;margin:10px 0 1px}
-.label{
-  display:flex;justify-content:space-between;margin-bottom:8px;
-  font-size:13px;font-weight:800
-}
+.label{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;font-weight:800}
 .counter{color:#888}
-textarea{
-  width:100%;height:145px;display:block;resize:none;
-  border:1px solid #d6d6d6;border-radius:15px;background:#fafafa;
-  color:#111;outline:none;padding:14px;font-size:17px;line-height:1.45
-}
+textarea{width:100%;height:145px;display:block;resize:none;border:1px solid #d6d6d6;border-radius:15px;background:#fafafa;color:#111;outline:none;padding:14px;font-size:17px;line-height:1.45}
 textarea:focus{border-color:#111;box-shadow:0 0 0 3px rgba(0,0,0,.07)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
-button.btn{
-  border:0;border-radius:13px;padding:13px 10px;font-weight:800;
-  cursor:pointer;font-size:14px
-}
-.primary{background:#111;color:#fff}
-.secondary{background:#eee;color:#111}
+.btn{border:0;border-radius:13px;padding:13px 10px;font-weight:800;cursor:pointer;font-size:14px}
+.primary{background:#111;color:#fff}.secondary{background:#eee;color:#111}
 .options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
-.option{
-  border:1px solid #ddd;border-radius:13px;background:#fafafa;padding:9px 11px
-}
+.option{border:1px solid #ddd;border-radius:13px;background:#fafafa;padding:9px 11px}
 .option span{display:block;color:#888;font-size:10px;font-weight:700;margin-bottom:4px}
 .option select{width:100%;border:0;background:transparent;font-weight:700;outline:0}
 .option input{width:100%;height:26px;border:0;padding:0;background:transparent}
 .footer{text-align:center;color:#888;font-size:12px;margin-top:20px}
 .credit{font-weight:900;color:#111}
-@media(max-width:760px){
-  .app{padding:14px 12px 28px}
-  .layout{grid-template-columns:1fr}
-  .preview-card{order:-1}
-}
-@media(max-width:390px){
-  .actions,.options{grid-template-columns:1fr}
-}
+@media(max-width:760px){.app{padding:14px 12px 28px}.layout{grid-template-columns:1fr}.preview-card{order:-1}}
+@media(max-width:390px){.actions,.options{grid-template-columns:1fr}}
 [data-theme="dark"] body{background:#101114;color:#f5f5f5}
 [data-theme="dark"] .card{background:#191a1e;border-color:#2b2c31;box-shadow:0 15px 40px rgba(0,0,0,.3)}
 [data-theme="dark"] .theme{background:#191a1e;color:#fff;border-color:#303137}
@@ -105,51 +60,49 @@ button.btn{
 </head>
 <body>
 <div class="app">
-  <header class="nav">
-    <div class="brand"><div class="logo">V</div><span>Brat Generator</span></div>
-    <button class="theme" id="themeBtn" aria-label="Ganti mode">☾</button>
-  </header>
+<header class="nav">
+  <div class="brand"><div class="logo">V</div><span>Brat Generator</span></div>
+  <button class="theme" id="themeBtn">☾</button>
+</header>
 
-  <section class="hero">
-    <div class="badge">TEXT GENERATOR</div>
-    <h1>Make it Brat.</h1>
-    <p>Buat gambar teks simpel langsung dari browser. Tidak ada kode yang tampil di halaman dan hasil gambar tetap rapi di dalam frame.</p>
-  </section>
+<section class="hero">
+  <div class="badge">TEXT GENERATOR</div>
+  <h1>Make it Brat.</h1>
+  <p>Buat gambar teks langsung dari browser. Teks panjang otomatis dipotong ke beberapa baris supaya tidak pernah keluar dari gambar.</p>
+</section>
 
-  <main class="layout">
-    <section class="card preview-card">
-      <div class="preview-head"><span>Preview</span><span class="live">LIVE</span></div>
-      <div class="stage"><canvas id="canvas"></canvas></div>
-      <div class="hint">Hasil PNG dibuat langsung di browser.</div>
-    </section>
+<main class="layout">
+<section class="card preview-card">
+  <div class="preview-head"><span>Preview</span><span class="live">LIVE</span></div>
+  <div class="stage"><canvas id="canvas"></canvas></div>
+  <div class="hint">Hasil PNG dibuat langsung di browser.</div>
+</section>
 
-    <section class="card">
-      <div class="label"><span>Text</span><span class="counter" id="counter">0 / 160</span></div>
-      <textarea id="text" maxlength="160" placeholder="Tulis sesuatu...">brat</textarea>
+<section class="card">
+  <div class="label"><span>Text</span><span class="counter" id="counter">0 / 160</span></div>
+  <textarea id="text" maxlength="160" placeholder="Tulis sesuatu...">brat</textarea>
+  <div class="actions">
+    <button class="btn primary" id="download">↓ Download PNG</button>
+    <button class="btn secondary" id="clear">Clear</button>
+  </div>
+  <div class="options">
+    <div class="option">
+      <span>Ukuran</span>
+      <select id="size">
+        <option value="1080">1080 × 1080</option>
+        <option value="720">720 × 720</option>
+        <option value="500">500 × 500</option>
+      </select>
+    </div>
+    <div class="option">
+      <span>Background</span>
+      <input id="bg" type="color" value="#ffffff">
+    </div>
+  </div>
+</section>
+</main>
 
-      <div class="actions">
-        <button class="btn primary" id="download">↓ Download PNG</button>
-        <button class="btn secondary" id="clear">Clear</button>
-      </div>
-
-      <div class="options">
-        <div class="option">
-          <span>Ukuran</span>
-          <select id="size">
-            <option value="1080">1080 × 1080</option>
-            <option value="720">720 × 720</option>
-            <option value="500">500 × 500</option>
-          </select>
-        </div>
-        <div class="option">
-          <span>Background</span>
-          <input id="bg" type="color" value="#ffffff">
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">Made with ♥ by <span class="credit">VaLz</span></footer>
+<footer class="footer">Made with ♥ by <span class="credit">VaLz</span></footer>
 </div>
 
 <script>
@@ -162,50 +115,108 @@ button.btn{
   const bg=document.getElementById('bg');
   const themeBtn=document.getElementById('themeBtn');
 
-  function wrap(str,max,font){
-    const words=str.trim().split(/\s+/).filter(Boolean);
-    if(!words.length)return [''];
-    const lines=[];let line='';
-    for(const word of words){
-      const test=line?line+' '+word:word;
-      if(ctx.measureText(test).width<=max || !line) line=test;
-      else{lines.push(line);line=word;}
+  /*
+    IMPORTANT:
+    The old version only wrapped at spaces. Text like
+    "JEJEJEJEJEJEJEJE" is one long word, so it overflowed.
+    This version breaks long words character-by-character.
+  */
+  function makeLines(str,maxWidth,fontSize){
+    ctx.font='900 '+fontSize+'px Arial, Helvetica, sans-serif';
+
+    const paragraphs=str.split(/\n/);
+    const result=[];
+
+    for(const paragraph of paragraphs){
+      const words=paragraph.trim().split(/\s+/).filter(Boolean);
+
+      if(words.length===0){
+        result.push('');
+        continue;
+      }
+
+      let line='';
+
+      for(const word of words){
+        const candidate=line ? line+' '+word : word;
+
+        if(ctx.measureText(candidate).width<=maxWidth){
+          line=candidate;
+          continue;
+        }
+
+        if(line){
+          result.push(line);
+          line='';
+        }
+
+        // Break an individual long word into safe chunks.
+        let chunk='';
+        for(const char of word){
+          const test=chunk+char;
+          if(ctx.measureText(test).width<=maxWidth){
+            chunk=test;
+          }else{
+            if(chunk) result.push(chunk);
+            chunk=char;
+          }
+        }
+        line=chunk;
+      }
+
+      if(line) result.push(line);
     }
-    if(line)lines.push(line);
-    return lines;
+
+    return result.length ? result : [''];
+  }
+
+  function fitText(str,n){
+    const maxWidth=n*0.84;
+    const maxLines=7;
+    let font=Math.floor(n*0.12);
+
+    while(font>=24){
+      const lines=makeLines(str,maxWidth,font);
+      if(lines.length<=maxLines) return {font,lines};
+      font-=2;
+    }
+
+    return {font:24,lines:makeLines(str,maxWidth,24)};
   }
 
   function draw(){
     const n=Number(size.value);
-    canvas.width=n;canvas.height=n;
+    canvas.width=n;
+    canvas.height=n;
+
     ctx.fillStyle=bg.value;
     ctx.fillRect(0,0,n,n);
 
-    const value=text.value.trim()||'';
+    const value=text.value.trim();
     counter.textContent=value.length+' / 160';
 
-    let font=Math.floor(n*.105);
-    let lines=[];
-    const max=n*.86;
+    if(!value) return;
 
-    while(font>=28){
-      ctx.font='900 '+font+'px Arial, Helvetica, sans-serif';
-      lines=wrap(value,max,font);
-      if(lines.length<=6)break;
-      font-=3;
-    }
+    const fitted=fitText(value,n);
+    const font=fitted.font;
+    const lines=fitted.lines;
 
     ctx.font='900 '+font+'px Arial, Helvetica, sans-serif';
     ctx.fillStyle='#000';
     ctx.textAlign='center';
     ctx.textBaseline='middle';
 
-    const lineHeight=font*.9;
-    const total=lines.length*lineHeight;
-    let y=n/2-total/2+lineHeight/2;
+    const lineHeight=font*.88;
+    const totalHeight=lines.length*lineHeight;
+    let y=n/2-totalHeight/2+lineHeight/2;
 
     for(const line of lines){
-      ctx.fillText(line,n/2,y);
+      // Final safety check: never draw outside the canvas width.
+      let safe=line;
+      while(ctx.measureText(safe).width>n*.86 && safe.length>1){
+        safe=safe.slice(0,-1);
+      }
+      ctx.fillText(safe,n/2,y);
       y+=lineHeight;
     }
   }
@@ -223,9 +234,9 @@ button.btn{
     setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
   };
 
-  text.oninput=draw;
-  size.onchange=draw;
-  bg.oninput=draw;
+  text.addEventListener('input',draw);
+  size.addEventListener('change',draw);
+  bg.addEventListener('input',draw);
 
   document.getElementById('clear').onclick=function(){
     text.value='';
@@ -244,9 +255,7 @@ button.btn{
 })();
 </script>
 </body>
-</html>
-'''
+</html>'''
 
-path = Path("/mnt/data/index.html")
 path.write_text(html, encoding="utf-8")
 print(path)
