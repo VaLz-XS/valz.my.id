@@ -2,17 +2,167 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VaLz Xixi | Free WA Bot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
   <style>
+    /* ============ PRELOADER ============ */
+    #preloader {
+      position: fixed; inset: 0; z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
+      background: #0d0a14; overflow: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .preloader-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(192,57,43,0.2), transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(107,47,160,0.15), transparent 50%);
+      animation: preloaderBgShift 8s ease-in-out infinite alternate;
+    }
+    @keyframes preloaderBgShift {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .preloader-content {
+      position: relative; z-index: 2; text-align: center;
+      animation: preloaderIn 0.8s ease-out;
+    }
+    @keyframes preloaderIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .preloader-logo {
+      position: relative; width: 140px; height: 140px;
+      margin: 0 auto 30px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .preloader-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .preloader-ring:nth-child(1) {
+      border-top-color: #c0392b; border-right-color: #c0392b;
+      animation: ringSpin 1.5s linear infinite;
+    }
+    .preloader-ring:nth-child(2) {
+      inset: 12px;
+      border-bottom-color: #f0c040; border-left-color: #f0c040;
+      animation: ringSpinReverse 2s linear infinite;
+    }
+    .preloader-ring:nth-child(3) {
+      inset: 24px;
+      border-top-color: #6b2fa0; border-right-color: #6b2fa0;
+      animation: ringSpin 2.5s linear infinite;
+    }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+    @keyframes ringSpinReverse { to { transform: rotate(-360deg); } }
+
+    .preloader-brand {
+      font-size: 3.5rem; font-weight: 900;
+      background: linear-gradient(135deg, #f0c040, #e74c3c, #6b2fa0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: brandPulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(192,57,43,0.6));
+      z-index: 1; font-family: 'Space Grotesk', sans-serif;
+    }
+    @keyframes brandPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .preloader-title {
+      font-size: 2rem; font-weight: 900;
+      color: #e8e0d0; margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 30px rgba(192,57,43,0.6);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .preloader-title span {
+      background: linear-gradient(135deg, #f0c040, #e74c3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .preloader-subtitle {
+      font-size: 0.9rem; color: #a09080;
+      margin-bottom: 35px; letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .preloader-bar-wrap {
+      width: 280px; height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px; overflow: hidden;
+      margin: 0 auto 15px; position: relative;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    .preloader-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #c0392b, #e74c3c, #f0c040);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 15px rgba(192,57,43,0.8);
+      position: relative;
+    }
+    .preloader-bar::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      background-size: 200% 100%;
+      animation: barShimmer 1.5s infinite;
+    }
+    @keyframes barShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .preloader-percent {
+      font-size: 1rem; font-weight: 700;
+      color: #f0c040; letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(240,192,64,0.6);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .preloader-particles {
+      position: absolute; inset: 0; z-index: 1;
+      pointer-events: none; overflow: hidden;
+    }
+    .preloader-particles span {
+      position: absolute; width: 4px; height: 4px;
+      background: #c0392b; border-radius: 50%;
+      box-shadow: 0 0 10px #c0392b;
+      animation: particleFloat 6s infinite ease-in-out;
+    }
+    .preloader-particles span:nth-child(1) { top: 15%; left: 10%; background: #f0c040; box-shadow: 0 0 10px #f0c040; }
+    .preloader-particles span:nth-child(2) { top: 80%; left: 15%; animation-delay: 0.5s; }
+    .preloader-particles span:nth-child(3) { top: 25%; left: 85%; background: #6b2fa0; box-shadow: 0 0 10px #6b2fa0; animation-delay: 1s; }
+    .preloader-particles span:nth-child(4) { top: 70%; left: 90%; background: #f0c040; box-shadow: 0 0 10px #f0c040; animation-delay: 1.5s; }
+    .preloader-particles span:nth-child(5) { top: 45%; left: 5%; animation-delay: 2s; }
+    .preloader-particles span:nth-child(6) { top: 60%; left: 95%; animation-delay: 2.5s; }
+    .preloader-particles span:nth-child(7) { top: 10%; left: 50%; background: #6b2fa0; box-shadow: 0 0 10px #6b2fa0; animation-delay: 3s; }
+    .preloader-particles span:nth-child(8) { top: 90%; left: 55%; background: #f0c040; box-shadow: 0 0 10px #f0c040; animation-delay: 3.5s; }
+
+    @keyframes particleFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+      50% { transform: translate(20px, -30px) scale(1.5); opacity: 1; }
+    }
+
+    /* ============ MAIN CSS ============ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0d0a14;
       --surface: rgba(15,10,25,0.85);
-      --card: rgba(18,12,30,0.88);
-      --border: rgba(180,30,40,0.25);
-      --border-hover: rgba(180,30,40,0.55);
+      --card: rgba(18,12,30,0.92);
+      --border: rgba(180,30,40,0.3);
+      --border-hover: rgba(180,30,40,0.6);
       --red: #c0392b;
       --red-bright: #e74c3c;
       --gold: #d4a017;
@@ -20,11 +170,76 @@
       --purple: #6b2fa0;
       --purple-dim: rgba(107,47,160,0.3);
       --cream: #e8e0d0;
-      --text: #a09080;
+      --text: #b8a898;
       --text-bright: #e8e0d0;
       --glow-red: rgba(192,57,43,0.2);
       --glow-gold: rgba(212,160,23,0.2);
+      --icon-muted: #a09080;
     }
+
+    body.light-theme {
+      --bg: #f5ede4;
+      --surface: rgba(255,255,255,0.9);
+      --card: rgba(255,255,255,0.95);
+      --border: rgba(180,30,40,0.35);
+      --border-hover: rgba(180,30,40,0.7);
+      --cream: #2a1a1a;
+      --text: #5a4a3a;
+      --text-bright: #2a1a1a;
+      --icon-muted: #7a6a5a;
+    }
+
+    /* SVG Icon base */
+    svg { display: block; }
+    .ico {
+      width: 100%; height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ico-fill {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    body.light-theme .bg-image {
+      filter: brightness(0.85) saturate(0.6) contrast(1.1);
+      opacity: 0.35;
+    }
+    body.light-theme .bg-overlay {
+      background:
+        radial-gradient(ellipse at 70% 40%, rgba(107,47,160,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.08) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(245,237,228,0.4) 0%, rgba(245,237,228,0.7) 100%);
+    }
+    body.light-theme .music-player,
+    body.light-theme .drawer,
+    body.light-theme .search-wrap input,
+    body.light-theme .filter-btn,
+    body.light-theme .hero-badge,
+    body.light-theme .menu-btn {
+      background: rgba(255,255,255,0.9);
+      color: #2a1a1a;
+    }
+    body.light-theme .filter-btn { color: #5a4a3a; }
+    body.light-theme .filter-btn.active,
+    body.light-theme .filter-btn:hover { color: var(--red-bright); }
+    body.light-theme .music-title { color: #2a1a1a; }
+    body.light-theme .music-status { color: #7a6a5a; }
+    body.light-theme .search-wrap input { color: #2a1a1a; }
+    body.light-theme .search-wrap input::placeholder { color: #9a8a7a; }
+    body.light-theme .search-icon { color: #9a8a7a; }
+    body.light-theme .card-desc { color: #6a5a4a; }
+    body.light-theme .card-version { color: #9a8a7a; }
+    body.light-theme footer { color: #7a6a5a; background: rgba(255,255,255,0.5); }
+    body.light-theme .stat-lbl { color: #7a6a5a; }
+    body.light-theme .panel-sub { color: #7a6a5a; }
+    body.light-theme .char-hint { opacity: 0.15; }
+    body.light-theme .drawer-item { color: #2a1a1a; }
+    body.light-theme .drawer-item:hover { background: rgba(192,57,43,0.1); }
+    body.light-theme .drawer-item.active { color: #2a1a1a; }
 
     html, body {
       background: var(--bg);
@@ -32,47 +247,290 @@
       font-family: 'Space Grotesk', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background-color 0.4s, color 0.4s;
     }
 
-    /* Background image */
     .bg-image {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: url('bg.jpg') center center / cover no-repeat;
       z-index: 0;
-      filter: brightness(0.18) saturate(0.7);
+      filter: brightness(0.55) saturate(1.1) contrast(1.05);
+      transition: filter 0.4s, opacity 0.4s;
     }
 
-    /* Overlay gradient */
     .bg-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background:
-        radial-gradient(ellipse at 70% 40%, rgba(107,47,160,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.1) 0%, transparent 50%),
-        linear-gradient(to bottom, rgba(13,10,20,0.5) 0%, rgba(13,10,20,0.85) 100%);
+        radial-gradient(ellipse at 70% 40%, rgba(107,47,160,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.08) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(13,10,20,0.25) 0%, rgba(13,10,20,0.55) 100%);
       z-index: 1;
+      transition: background 0.4s;
     }
 
-    /* Scanline */
     body::before {
       content: '';
       position: fixed; inset: 0;
-      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px);
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
       pointer-events: none; z-index: 998;
+      transition: opacity 0.4s;
     }
 
-    /* All content above bg */
     .content { position: relative; z-index: 10; }
 
-    /* ─── HERO ─── */
-    .hero {
-      text-align: center;
-      padding: 3rem 1rem 2rem;
+    /* ============ TOP BAR LEFT ============ */
+    .top-bar-left {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
     }
+
+    .menu-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(180,30,40,0.4);
+      background: rgba(13,10,20,0.9);
+      color: var(--cream);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px rgba(192,57,43,0.15);
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .menu-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .menu-btn:hover {
+      border-color: rgba(180,30,40,0.8);
+      transform: scale(1.08) rotate(90deg);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 30px rgba(192,57,43,0.4);
+    }
+    .menu-btn:active { transform: scale(0.95) rotate(90deg); }
+    .menu-btn.active {
+      background: linear-gradient(145deg, rgba(192,57,43,0.95), rgba(139,26,26,0.95));
+      color: #fff;
+      border-color: rgba(240,192,64,0.5);
+      transform: rotate(90deg);
+    }
+
+    /* ============ DRAWER ============ */
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .drawer-overlay.show { opacity: 1; visibility: visible; }
+
+    .drawer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 310px;
+      max-width: 85vw;
+      height: 100vh;
+      background: rgba(13,10,20,0.98);
+      backdrop-filter: blur(30px);
+      border-right: 1px solid rgba(180,30,40,0.3);
+      z-index: 10001;
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 10px 0 60px rgba(0,0,0,0.7);
+      overflow-y: auto;
+    }
+    .drawer.show { transform: translateX(0); }
+    body.light-theme .drawer {
+      background: rgba(255,255,255,0.98);
+      border-right-color: rgba(180,30,40,0.25);
+      box-shadow: 10px 0 60px rgba(0,0,0,0.15);
+    }
+
+    .drawer-header {
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(180,30,40,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .drawer-logo {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--red), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(192,57,43,0.4);
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -1px;
+    }
+    .drawer-brand {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .drawer-brand-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: 0.5px;
+    }
+    .drawer-brand-sub {
+      font-size: 0.65rem;
+      color: #7a6a5a;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .drawer-nav {
+      flex: 1;
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .drawer-item {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      color: var(--text-bright);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      background: transparent;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: left;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .drawer-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 0;
+      background: linear-gradient(to bottom, var(--red), var(--gold));
+      border-radius: 0 3px 3px 0;
+      transition: height 0.3s;
+    }
+    .drawer-item:hover {
+      background: rgba(192,57,43,0.1);
+      border-color: rgba(180,30,40,0.3);
+      padding-left: 1.25rem;
+    }
+    .drawer-item:hover::before { height: 60%; }
+    .drawer-item.active {
+      background: linear-gradient(135deg, rgba(192,57,43,0.2), rgba(107,47,160,0.15));
+      border-color: rgba(192,57,43,0.5);
+      color: var(--cream);
+    }
+    .drawer-item.active::before { height: 70%; }
+
+    .drawer-item-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(192,57,43,0.1);
+      border: 1px solid rgba(192,57,43,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red-bright);
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .drawer-item:hover .drawer-item-icon {
+      background: rgba(192,57,43,0.2);
+      border-color: rgba(192,57,43,0.5);
+      box-shadow: 0 0 12px rgba(192,57,43,0.3);
+    }
+    .drawer-item.active .drawer-item-icon {
+      background: linear-gradient(135deg, rgba(192,57,43,0.4), rgba(212,160,23,0.3));
+      border-color: rgba(240,192,64,0.5);
+      color: var(--gold-bright);
+    }
+    .drawer-item-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .drawer-item-text {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+    .drawer-item-label {
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.3px;
+    }
+    .drawer-item-desc {
+      font-size: 0.68rem;
+      color: #7a6a5a;
+      margin-top: 2px;
+      letter-spacing: 0.2px;
+    }
+
+    .drawer-footer {
+      padding: 1rem 1.5rem 1.5rem;
+      border-top: 1px solid rgba(180,30,40,0.2);
+      font-size: 0.7rem;
+      color: #7a6a5a;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .drawer-footer a { color: var(--red-bright); text-decoration: none; }
+    .drawer-footer a:hover { color: var(--gold); }
+
+    /* ============ VIEWS ============ */
+    .view { display: none; animation: viewIn 0.4s ease-out; }
+    .view.active { display: block; }
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ HERO ============ */
+    .hero { text-align: center; padding: 6rem 1rem 2rem; }
     .hero-badge {
-      display: inline-block;
-      padding: 0.25rem 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
       border: 1px solid var(--red);
       border-radius: 999px;
       font-size: 0.68rem;
@@ -81,76 +539,110 @@
       text-transform: uppercase;
       margin-bottom: 1rem;
       box-shadow: 0 0 12px var(--glow-red);
+      animation: badgePulse 2s ease-in-out infinite;
+      background: rgba(13,10,20,0.5);
+      backdrop-filter: blur(6px);
+    }
+    .hero-badge svg {
+      width: 11px;
+      height: 11px;
+      fill: currentColor;
+      stroke: none;
+      color: var(--gold-bright);
+    }
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 12px var(--glow-red); }
+      50% { box-shadow: 0 0 24px rgba(192,57,43,0.5); }
     }
     .hero h1 {
       font-size: clamp(2rem, 8vw, 3.5rem);
-      font-weight: 700;
-      color: var(--cream);
-      letter-spacing: -1px;
-      line-height: 1.1;
+      font-weight: 700; color: var(--cream);
+      letter-spacing: -1px; line-height: 1.1;
       margin-bottom: 0.5rem;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7);
     }
     .hero h1 span {
       color: var(--gold-bright);
-      text-shadow: 0 0 30px rgba(212,160,23,0.5);
+      text-shadow: 0 0 30px rgba(212,160,23,0.7), 0 2px 20px rgba(0,0,0,0.9);
     }
     .hero p {
-      font-size: 0.88rem;
-      color: var(--text);
-      max-width: 380px;
-      margin: 0 auto 1.5rem;
+      font-size: 0.88rem; color: var(--text-bright);
+      max-width: 380px; margin: 0 auto 1.5rem;
       line-height: 1.7;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
+    body.light-theme .hero h1,
+    body.light-theme .hero p { text-shadow: 0 2px 10px rgba(0,0,0,0.15); }
 
-    /* Stats */
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
+    .stats { display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
     .stat { text-align: center; }
     .stat-num {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--gold-bright);
-      display: block;
-      text-shadow: 0 0 16px var(--glow-gold);
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--gold-bright); display: block;
+      text-shadow: 0 0 16px var(--glow-gold), 0 2px 10px rgba(0,0,0,0.8);
     }
     .stat-lbl {
-      font-size: 0.62rem;
-      color: #5a4a3a;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      font-size: 0.62rem; color: #8a7a6a;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     }
 
-    /* Divider */
     .divider {
-      width: 80px;
-      height: 1px;
+      width: 80px; height: 1px;
       background: linear-gradient(to right, transparent, var(--red), transparent);
       margin: 0 auto 2rem;
     }
 
-    /* ─── SEARCH ─── */
+    /* ============ PAGE HEADER ============ */
+    .page-header { text-align: center; padding: 5rem 1rem 1rem; }
+    .page-header-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(192,57,43,0.15), rgba(212,160,23,0.08));
+      border: 1px solid rgba(192,57,43,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red-bright);
+      box-shadow: 0 0 30px rgba(192,57,43,0.2);
+    }
+    .page-header-icon svg {
+      width: 30px;
+      height: 30px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .page-header-title {
+      font-size: clamp(1.6rem, 6vw, 2.2rem);
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -0.5px;
+      margin-bottom: 0.4rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    }
+    .page-header-sub {
+      font-size: 0.85rem;
+      color: var(--text);
+      letter-spacing: 0.3px;
+    }
+
+    /* ============ SEARCH ============ */
     .search-wrap {
-      max-width: 420px;
-      margin: 0 auto 1.5rem;
-      padding: 0 1rem;
-      position: relative;
+      max-width: 420px; margin: 1.5rem auto;
+      padding: 0 1rem; position: relative;
     }
     .search-wrap input {
-      width: 100%;
-      padding: 0.72rem 1rem 0.72rem 2.5rem;
-      background: rgba(13,10,20,0.8);
-      border: 1px solid rgba(180,30,40,0.2);
-      border-radius: 12px;
-      color: var(--cream);
+      width: 100%; padding: 0.72rem 1rem 0.72rem 2.75rem;
+      background: rgba(13,10,20,0.9);
+      border: 1px solid rgba(180,30,40,0.3);
+      border-radius: 12px; color: var(--cream);
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.85rem;
-      outline: none;
+      font-size: 0.85rem; outline: none;
       backdrop-filter: blur(10px);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
@@ -158,402 +650,1264 @@
       border-color: var(--red);
       box-shadow: 0 0 16px var(--glow-red);
     }
-    .search-wrap input::placeholder { color: #3a2a2a; }
-    .search-icon { position: absolute; left: 1.9rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #3a2a2a; }
-
-    /* ─── FILTERS ─── */
-    .filters {
+    .search-wrap input::placeholder { color: #6a5a4a; }
+    .search-icon {
+      position: absolute;
+      left: 1.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: #6a5a4a;
       display: flex;
-      gap: 0.5rem;
+      align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
-      padding: 0 1rem;
-      margin-bottom: 2rem;
+      pointer-events: none;
+    }
+    .search-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ============ FILTERS ============ */
+    .filters {
+      display: flex; gap: 0.5rem; justify-content: center;
+      flex-wrap: wrap; padding: 0 1rem; margin-bottom: 2rem;
     }
     .filter-btn {
-      padding: 0.3rem 0.9rem;
+      padding: 0.4rem 1rem;
       border-radius: 999px;
-      border: 1px solid rgba(180,30,40,0.15);
-      background: transparent;
-      color: #4a3535;
+      border: 1px solid rgba(180,30,40,0.25);
+      background: rgba(13,10,20,0.5);
+      color: #8a7a6a;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
+      font-size: 0.72rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      backdrop-filter: blur(6px);
+      letter-spacing: 0.3px;
     }
     .filter-btn.active, .filter-btn:hover {
-      border-color: var(--red);
-      color: var(--red-bright);
+      border-color: var(--red); color: var(--red-bright);
       background: var(--glow-red);
       box-shadow: 0 0 10px var(--glow-red);
     }
 
-    /* ─── GRID ─── */
+    /* ============ GRID ============ */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-      gap: 1rem;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 1rem 5rem;
+      gap: 1rem; max-width: 900px;
+      margin: 0 auto; padding: 0 1rem 3rem;
     }
 
-    /* ─── CARD ─── */
+    /* ============ CARD ============ */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      backdrop-filter: blur(12px);
+      border-radius: 16px; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+      backdrop-filter: blur(16px);
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
-
-    /* Red left accent line */
     .card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 20%; bottom: 20%;
-      width: 2px;
+      content: ''; position: absolute;
+      left: 0; top: 20%; bottom: 20%; width: 2px;
       background: linear-gradient(to bottom, transparent, var(--red), transparent);
-      opacity: 0;
-      transition: opacity 0.2s;
+      opacity: 0; transition: opacity 0.2s;
     }
     .card:hover::before { opacity: 1; }
     .card:hover {
       border-color: var(--border-hover);
-      box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 20px var(--glow-red);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.6), 0 0 20px var(--glow-red);
       transform: translateY(-2px);
     }
 
     .card-top { display: flex; align-items: flex-start; gap: 0.75rem; }
     .card-icon {
-      width: 44px; height: 44px;
-      border-radius: 10px;
+      width: 48px; height: 48px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
       flex-shrink: 0;
-      border: 1px solid rgba(180,30,40,0.2);
+      border: 1px solid currentColor;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.9;
+    }
+    .card:hover .card-icon {
+      transform: scale(1.08);
+      box-shadow: 0 0 20px currentColor;
     }
     .card-meta { flex: 1; min-width: 0; }
     .card-name { font-size: 0.95rem; font-weight: 700; color: var(--cream); margin-bottom: 0.15rem; }
-    .card-version { font-size: 0.62rem; color: #4a3535; letter-spacing: 1px; }
-
-    .card-desc { font-size: 0.78rem; color: #7a6050; line-height: 1.65; }
-
+    .card-version { font-size: 0.62rem; color: #7a6a5a; letter-spacing: 1px; }
+    .card-desc { font-size: 0.78rem; color: #a09080; line-height: 1.65; }
     .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    .tag {
-      padding: 0.15rem 0.55rem;
-      border-radius: 999px;
-      font-size: 0.62rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-    .tag-free { background: rgba(192,57,43,0.1); color: var(--red-bright); border: 1px solid rgba(192,57,43,0.25); }
-    .tag-md   { background: rgba(107,47,160,0.12); color: #9b59b6; border: 1px solid rgba(107,47,160,0.25); }
-    .tag-js   { background: rgba(212,160,23,0.1); color: var(--gold); border: 1px solid rgba(212,160,23,0.25); }
-    .tag-ts   { background: rgba(100,150,255,0.1); color: #7fb3ff; border: 1px solid rgba(100,150,255,0.2); }
-    .tag-hot  { background: rgba(192,57,43,0.15); color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); }
-    .tag-new  { background: rgba(212,160,23,0.1); color: var(--gold-bright); border: 1px solid rgba(212,160,23,0.3); }
+    .tag { padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.3px; }
+    .tag-free { background: rgba(192,57,43,0.15); color: var(--red-bright); border: 1px solid rgba(192,57,43,0.35); }
+    .tag-md   { background: rgba(107,47,160,0.18); color: #b07fd6; border: 1px solid rgba(107,47,160,0.35); }
+    .tag-js   { background: rgba(212,160,23,0.15); color: var(--gold-bright); border: 1px solid rgba(212,160,23,0.35); }
+    .tag-ts   { background: rgba(100,150,255,0.15); color: #9fc3ff; border: 1px solid rgba(100,150,255,0.3); }
+    .tag-hot  { background: rgba(192,57,43,0.2); color: #e74c3c; border: 1px solid rgba(192,57,43,0.4); }
+    .tag-new  { background: rgba(212,160,23,0.15); color: var(--gold-bright); border: 1px solid rgba(212,160,23,0.4); }
 
     .card-footer { display: flex; gap: 0.5rem; margin-top: auto; }
     .btn-dl {
-      flex: 1;
-      padding: 0.55rem;
+      flex: 1; padding: 0.6rem 0.8rem;
       background: linear-gradient(135deg, var(--red), #8b1a1a);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
+      color: #fff; border: none; border-radius: 10px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+      font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
       transition: all 0.15s;
       box-shadow: 0 0 14px rgba(192,57,43,0.3);
+      letter-spacing: 0.3px;
+    }
+    .btn-dl svg {
+      width: 14px; height: 14px;
+      fill: none; stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
     }
     .btn-dl:hover { box-shadow: 0 0 24px rgba(192,57,43,0.5); transform: translateY(-1px); }
     .btn-copy {
-      padding: 0.55rem 0.75rem;
-      background: transparent;
-      color: #4a3535;
-      border: 1px solid rgba(180,30,40,0.15);
+      padding: 0.6rem 0.8rem;
+      background: transparent; color: #8a7a6a;
+      border: 1px solid rgba(180,30,40,0.25);
       border-radius: 10px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.15s;
+      cursor: pointer; transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .btn-copy:hover { border-color: var(--red); color: var(--red-bright); }
+    .btn-copy svg {
+      width: 15px; height: 15px;
+      fill: none; stroke: currentColor; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .btn-copy:hover {
+      border-color: var(--red);
+      color: var(--red-bright);
+      box-shadow: 0 0 12px rgba(192,57,43,0.3);
+    }
 
-    /* Toast */
     .toast {
-      position: fixed;
-      bottom: 1.5rem; left: 50%;
+      position: fixed; bottom: 1.5rem; left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: linear-gradient(135deg, var(--red), #8b1a1a);
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.78rem;
-      padding: 0.55rem 1.2rem;
-      border-radius: 999px;
-      z-index: 9999;
-      transition: transform 0.3s;
+      color: #fff; font-weight: 700; font-size: 0.78rem;
+      padding: 0.6rem 1.3rem; border-radius: 999px;
+      z-index: 99999; transition: transform 0.3s;
       pointer-events: none;
       box-shadow: 0 0 20px rgba(192,57,43,0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toast svg {
+      width: 14px; height: 14px;
+      fill: none; stroke: currentColor; stroke-width: 2.4;
+      stroke-linecap: round; stroke-linejoin: round;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* Empty */
-    .empty { grid-column: 1/-1; text-align: center; padding: 3rem; color: #2a1a1a; font-size: 0.85rem; }
+    .empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3.5rem 1rem;
+      color: #6a5a4a;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .empty svg {
+      width: 40px; height: 40px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.5;
+    }
 
-    /* Footer */
     footer {
       position: relative; z-index: 10;
-      text-align: center;
-      padding: 1.5rem 1rem;
-      font-size: 0.7rem;
-      color: #2a1a1a;
+      text-align: center; padding: 1.5rem 1rem;
+      font-size: 0.7rem; color: #6a5a4a;
       letter-spacing: 1px;
-      border-top: 1px solid rgba(180,30,40,0.1);
+      border-top: 1px solid rgba(180,30,40,0.15);
+      background: rgba(13,10,20,0.4);
+      backdrop-filter: blur(8px);
     }
     footer a { color: var(--red); text-decoration: none; }
     footer a:hover { color: var(--gold); }
 
-    /* ─── PANEL SECTION ─── */
-    .panel-section {
-      max-width: 900px;
-      margin: 0 auto 2.5rem;
-      padding: 0 1rem;
-      text-align: center;
-    }
-    .panel-label {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--cream);
-      letter-spacing: 1px;
-      margin-bottom: 0.4rem;
-    }
-    .panel-sub {
-      font-size: 0.75rem;
-      color: #4a3535;
-      margin-bottom: 1.25rem;
-      letter-spacing: 0.3px;
-    }
-    .panel-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.75rem;
-    }
+    /* ============ PANEL SECTION ============ */
+    .panel-section { max-width: 900px; margin: 0 auto 2.5rem; padding: 0 1rem; text-align: center; }
+    .panel-label { font-size: 1rem; font-weight: 700; color: var(--cream); letter-spacing: 1px; margin-bottom: 0.4rem; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+    .panel-sub { font-size: 0.75rem; color: #8a7a6a; margin-bottom: 1.25rem; letter-spacing: 0.3px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
     .panel-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.1rem 0.75rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      backdrop-filter: blur(12px);
-      position: relative;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.25rem 0.75rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      backdrop-filter: blur(16px); position: relative;
       transition: all 0.2s;
     }
     .panel-card:hover {
       border-color: var(--red);
-      box-shadow: 0 4px 20px rgba(192,57,43,0.2);
+      box-shadow: 0 4px 20px rgba(192,57,43,0.3);
       transform: translateY(-2px);
     }
     .panel-card.popular {
-      border-color: rgba(192,57,43,0.4);
-      box-shadow: 0 0 20px rgba(192,57,43,0.1);
+      border-color: rgba(192,57,43,0.5);
+      box-shadow: 0 0 20px rgba(192,57,43,0.15);
     }
     .panel-card.gold {
-      border-color: rgba(212,160,23,0.3);
-      box-shadow: 0 0 20px rgba(212,160,23,0.08);
+      border-color: rgba(212,160,23,0.4);
+      box-shadow: 0 0 20px rgba(212,160,23,0.12);
     }
     .panel-card.gold:hover {
       border-color: var(--gold);
-      box-shadow: 0 4px 20px rgba(212,160,23,0.25);
+      box-shadow: 0 4px 20px rgba(212,160,23,0.3);
     }
     .panel-badge {
-      position: absolute;
-      top: -10px; left: 50%;
+      position: absolute; top: -10px; left: 50%;
       transform: translateX(-50%);
-      background: var(--red);
-      color: #fff;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 0.15rem 0.6rem;
-      border-radius: 999px;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      box-shadow: 0 0 10px rgba(192,57,43,0.4);
-    }
-    .panel-icon { font-size: 1.4rem; }
-    .panel-ram {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--cream);
-    }
-    .panel-price {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--red-bright);
-    }
-    .panel-card.gold .panel-price { color: var(--gold-bright); }
-    .panel-btn {
-      margin-top: 0.3rem;
-      padding: 0.4rem 1.1rem;
       background: linear-gradient(135deg, var(--red), #8b1a1a);
       color: #fff;
-      border: none;
-      border-radius: 8px;
+      font-size: 0.58rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 999px;
+      letter-spacing: 0.8px; white-space: nowrap;
+      box-shadow: 0 0 12px rgba(192,57,43,0.5);
+      text-transform: uppercase;
+    }
+    .panel-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(192,57,43,0.1);
+      border: 1px solid rgba(192,57,43,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red-bright);
+      margin-bottom: 0.25rem;
+      transition: all 0.2s;
+    }
+    .panel-card.gold .panel-icon {
+      background: rgba(212,160,23,0.1);
+      border-color: rgba(212,160,23,0.4);
+      color: var(--gold-bright);
+    }
+    .panel-card:hover .panel-icon {
+      transform: scale(1.08);
+      box-shadow: 0 0 18px currentColor;
+    }
+    .panel-icon svg {
+      width: 20px; height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .panel-ram { font-size: 1.15rem; font-weight: 700; color: var(--cream); }
+    .panel-price { font-size: 0.82rem; font-weight: 700; color: var(--red-bright); }
+    .panel-card.gold .panel-price { color: var(--gold-bright); }
+    .panel-btn {
+      margin-top: 0.4rem; padding: 0.45rem 1.2rem;
+      background: linear-gradient(135deg, var(--red), #8b1a1a);
+      color: #fff; border: none; border-radius: 8px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
+      font-size: 0.75rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
       transition: all 0.15s;
       box-shadow: 0 0 10px rgba(192,57,43,0.2);
+      letter-spacing: 0.5px;
     }
-    .panel-btn:hover { box-shadow: 0 0 18px rgba(192,57,43,0.4); }
+    .panel-btn:hover { box-shadow: 0 0 18px rgba(192,57,43,0.4); transform: translateY(-1px); }
     .btn-gold {
       background: linear-gradient(135deg, var(--gold), #8b6000);
       box-shadow: 0 0 10px rgba(212,160,23,0.2);
     }
     .btn-gold:hover { box-shadow: 0 0 18px rgba(212,160,23,0.4); }
 
-    /* WA Channel */
+    /* ============ WA CHANNEL ============ */
     .wa-channel {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      max-width: 340px;
-      margin: 0 auto 1.5rem;
+      display: flex; align-items: center; gap: 0.85rem;
+      max-width: 360px; margin: 0 auto 1.5rem;
       padding: 0.75rem 1rem;
-      background: rgba(18,55,18,0.3);
-      border: 1px solid rgba(37,211,102,0.2);
-      border-radius: 14px;
-      text-decoration: none;
-      backdrop-filter: blur(10px);
+      background: rgba(18,55,18,0.5);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 14px; text-decoration: none;
+      backdrop-filter: blur(12px);
       transition: all 0.2s;
     }
     .wa-channel:hover {
-      border-color: rgba(37,211,102,0.5);
-      background: rgba(18,55,18,0.5);
-      box-shadow: 0 0 20px rgba(37,211,102,0.15);
+      border-color: rgba(37,211,102,0.6);
+      background: rgba(18,55,18,0.7);
+      box-shadow: 0 0 20px rgba(37,211,102,0.2);
       transform: translateY(-1px);
     }
-    .wa-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .wa-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(37,211,102,0.15);
+      border: 1px solid rgba(37,211,102,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #25d366;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .wa-channel:hover .wa-icon {
+      background: rgba(37,211,102,0.25);
+      box-shadow: 0 0 15px rgba(37,211,102,0.3);
+    }
+    .wa-icon svg {
+      width: 18px; height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
     .wa-text { display: flex; flex-direction: column; flex: 1; text-align: left; }
     .wa-title { font-size: 0.82rem; font-weight: 700; color: #25d366; }
-    .wa-sub { font-size: 0.65rem; color: #2a5a2a; letter-spacing: 0.3px; margin-top: 0.1rem; }
-    .wa-arrow { color: #25d366; font-size: 0.9rem; opacity: 0.6; flex-shrink: 0; }
+    .wa-sub { font-size: 0.65rem; color: #4a8a4a; letter-spacing: 0.3px; margin-top: 0.1rem; }
+    .wa-arrow {
+      width: 16px; height: 16px;
+      color: #25d366;
+      opacity: 0.6;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .wa-channel:hover .wa-arrow {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+    .wa-arrow svg {
+      width: 16px; height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-    /* Character watermark bottom-right */
     .char-hint {
-      position: fixed;
-      bottom: 0; right: 0;
-      width: min(200px, 40vw);
-      height: min(300px, 60vh);
+      position: fixed; bottom: 0; right: 0;
+      width: min(200px, 40vw); height: min(300px, 60vh);
       background: url('bg.jpg') center top / cover no-repeat;
-      mask-image: linear-gradient(to left, rgba(0,0,0,0.15), transparent),
-                  linear-gradient(to top, rgba(0,0,0,0.2), transparent);
-      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.12), transparent);
-      opacity: 0.12;
-      z-index: 2;
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.2), transparent),
+                  linear-gradient(to top, rgba(0,0,0,0.25), transparent);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.2), transparent);
+      opacity: 0.25; z-index: 2; pointer-events: none;
+    }
+
+    /* ============ HIDDEN YT IFRAME ============ */
+    .yt-hidden {
+      position: fixed;
+      top: -300px; left: -300px;
+      width: 200px; height: 200px;
+      opacity: 0.01;
       pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .yt-hidden iframe {
+      width: 100%; height: 100%;
+      border: none; display: block;
+    }
+
+    /* ============ MUSIC PLAYER ============ */
+    .music-player {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.5rem 0.9rem 0.5rem 0.5rem;
+      background: rgba(13,10,20,0.9);
+      border: 1px solid rgba(180,30,40,0.35);
+      border-radius: 999px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px rgba(192,57,43,0.12);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .music-player:hover {
+      border-color: rgba(180,30,40,0.7);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 30px rgba(192,57,43,0.35);
+      transform: translateY(-1px);
+    }
+
+    .music-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(240,192,64,0.2);
+      background: linear-gradient(145deg, rgba(192,57,43,0.95), rgba(139,26,26,0.95));
+      color: #fff;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(192,57,43,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+      position: relative; overflow: hidden;
+      padding: 0;
+    }
+    .music-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .music-btn:hover::before { opacity: 1; }
+    .music-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 22px rgba(192,57,43,0.7), 0 0 40px rgba(240,192,64,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .music-btn:active { transform: scale(0.95); }
+    .music-btn #musicIconPlay {
+      width: 16px; height: 16px;
+      fill: currentColor;
+      position: relative; z-index: 1;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+      margin-left: 2px;
+      stroke: none;
+    }
+    .music-btn.playing {
+      background: linear-gradient(145deg, rgba(240,192,64,0.95), rgba(180,120,10,0.95));
+      border-color: rgba(240,192,64,0.5);
+      animation: musicPulse 2s ease-in-out infinite;
+    }
+    @keyframes musicPulse {
+      0%, 100% { box-shadow: 0 0 12px rgba(240,192,64,0.4), inset 0 1px 0 rgba(255,255,255,0.15); }
+      50% { box-shadow: 0 0 25px rgba(240,192,64,0.8), 0 0 40px rgba(240,192,64,0.3), inset 0 1px 0 rgba(255,255,255,0.15); }
+    }
+
+    .music-eq {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 2px; height: 16px; width: 18px;
+      position: relative; z-index: 1;
+    }
+    .music-eq span {
+      display: block; width: 2.5px;
+      background: #fff; border-radius: 1px;
+      animation: eqBar 0.8s ease-in-out infinite;
+      box-shadow: 0 0 3px rgba(255,255,255,0.4);
+    }
+    .music-eq span:nth-child(1) { height: 40%; animation-delay: 0s; }
+    .music-eq span:nth-child(2) { height: 80%; animation-delay: 0.2s; }
+    .music-eq span:nth-child(3) { height: 55%; animation-delay: 0.4s; }
+    .music-eq span:nth-child(4) { height: 70%; animation-delay: 0.6s; }
+    @keyframes eqBar {
+      0%, 100% { height: 30%; }
+      50% { height: 100%; }
+    }
+
+    .music-info {
+      display: flex; flex-direction: column;
+      min-width: 0; max-width: 120px;
+      justify-content: center; gap: 2px;
+    }
+    .music-title {
+      font-size: 0.65rem; font-weight: 700;
+      color: var(--cream);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: 0.4px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+    .music-status {
+      font-size: 0.55rem; color: #8a7a6a;
+      letter-spacing: 0.8px;
+      display: flex; align-items: center; gap: 0.3rem;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .music-status .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #555; display: inline-block;
+      transition: all 0.3s;
+    }
+    .music-status .dot.on {
+      background: #25d366;
+      box-shadow: 0 0 8px #25d366, 0 0 15px rgba(37,211,102,0.5);
+      animation: dotPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    /* ============ SETTINGS PAGE ============ */
+    .settings-wrap {
+      max-width: 640px;
+      margin: 0 auto 3rem;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .settings-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      backdrop-filter: blur(16px);
+      transition: all 0.2s;
+    }
+    .settings-section:hover {
+      border-color: rgba(180,30,40,0.5);
+    }
+    .settings-section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: 0.3px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(180,30,40,0.15);
+    }
+    .settings-title-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red-bright);
+      flex-shrink: 0;
+    }
+    .settings-title-icon svg {
+      width: 16px; height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(180,30,40,0.1);
+    }
+    .settings-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .settings-row-info { flex: 1; min-width: 0; }
+    .settings-row-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.2rem;
+    }
+    .settings-row-desc {
+      font-size: 0.7rem;
+      color: #8a7a6a;
+      line-height: 1.5;
+    }
+    .settings-toggle {
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(120,120,120,0.3);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.3s;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .settings-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .settings-toggle.on {
+      background: linear-gradient(135deg, var(--red), var(--gold));
+    }
+    .settings-toggle.on::after {
+      transform: translateX(20px);
+    }
+    .settings-btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(180,30,40,0.4);
+      background: rgba(192,57,43,0.15);
+      color: var(--red-bright);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .settings-btn svg {
+      width: 14px; height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .settings-btn:hover {
+      background: rgba(192,57,43,0.3);
+      border-color: var(--red);
+      box-shadow: 0 0 15px rgba(192,57,43,0.3);
+      transform: translateY(-1px);
+    }
+    .settings-btn.danger {
+      border-color: rgba(231,76,60,0.5);
+      color: #ff6b5b;
+      background: rgba(231,76,60,0.1);
+    }
+    .settings-btn.danger:hover {
+      background: rgba(231,76,60,0.25);
+      border-color: #e74c3c;
+      box-shadow: 0 0 15px rgba(231,76,60,0.4);
+    }
+
+    .settings-version {
+      font-size: 0.75rem;
+      color: var(--gold-bright);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      background: rgba(212,160,23,0.1);
+      border: 1px solid rgba(212,160,23,0.3);
+    }
+
+    .settings-about {
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.75;
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 480px) {
+      .preloader-logo { width: 110px; height: 110px; }
+      .preloader-brand { font-size: 2.8rem; }
+      .preloader-title { font-size: 1.6rem; }
+      .preloader-subtitle { font-size: 0.75rem; letter-spacing: 2px; }
+      .preloader-bar-wrap { width: 220px; }
+
+      .top-bar-left { top: 0.75rem; left: 0.75rem; gap: 0.4rem; }
+      .menu-btn { width: 40px; height: 40px; }
+      .menu-btn svg { width: 18px; height: 18px; }
+
+      .music-player { padding: 0.4rem 0.7rem 0.4rem 0.4rem; gap: 0.5rem; }
+      .music-btn { width: 32px; height: 32px; }
+      .music-btn #musicIconPlay { width: 13px; height: 13px; }
+      .music-eq { height: 12px; width: 13px; gap: 1.5px; }
+      .music-eq span { width: 2px; }
+      .music-info { max-width: 70px; }
+      .music-title { font-size: 0.55rem; }
+      .music-status { font-size: 0.48rem; }
+
+      .hero { padding: 5rem 1rem 1.5rem; }
+      .page-header { padding: 4rem 1rem 1rem; }
+      .page-header-icon { width: 56px; height: 56px; }
+      .page-header-icon svg { width: 26px; height: 26px; }
+
+      .settings-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+      }
+      .settings-btn,
+      .settings-toggle {
+        align-self: flex-end;
+      }
     }
   </style>
 </head>
 <body>
+
+<!-- ============ LOADING SCREEN ============ -->
+<div id="preloader">
+  <div class="preloader-bg"></div>
+  <div class="preloader-content">
+    <div class="preloader-logo">
+      <div class="preloader-ring"></div>
+      <div class="preloader-ring"></div>
+      <div class="preloader-ring"></div>
+      <div class="preloader-brand">V</div>
+    </div>
+    <h1 class="preloader-title">VaLz <span>Xixi</span></h1>
+    <p class="preloader-subtitle">Loading Experience...</p>
+    <div class="preloader-bar-wrap">
+      <div class="preloader-bar" id="preloaderBar"></div>
+    </div>
+    <div class="preloader-percent" id="preloaderPercent">0%</div>
+  </div>
+  <div class="preloader-particles">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+</div>
+<!-- ============ END LOADING ============ -->
+
+<!-- ============ TOP BAR LEFT ============ -->
+<div class="top-bar-left">
+  <button class="menu-btn" id="menuBtn" title="Menu">
+    <svg viewBox="0 0 24 24">
+      <line x1="4" y1="7" x2="20" y2="7"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="17" x2="20" y2="17"/>
+    </svg>
+  </button>
+
+  <div class="music-player" id="musicPlayer">
+    <button class="music-btn" id="musicToggle" title="Putar Musik">
+      <svg id="musicIconPlay" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+      <div class="music-eq" id="musicIconEq" style="display:none;">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </button>
+    <div class="music-info">
+      <span class="music-title">Ariana Grande · bye</span>
+      <span class="music-status"><span class="dot" id="musicDot"></span> <span id="musicStatusText">Paused</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DRAWER MENU ============ -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-logo">V</div>
+    <div class="drawer-brand">
+      <span class="drawer-brand-title">VaLz Store</span>
+      <span class="drawer-brand-sub">Free WA Bot</span>
+    </div>
+  </div>
+
+  <nav class="drawer-nav">
+    <button class="drawer-item active" data-view="dashboard">
+      <span class="drawer-item-icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="9" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="5" rx="1.5"/>
+          <rect x="14" y="12" width="7" height="9" rx="1.5"/>
+          <rect x="3" y="16" width="7" height="5" rx="1.5"/>
+        </svg>
+      </span>
+      <div class="drawer-item-text">
+        <span class="drawer-item-label">Dashboard</span>
+        <span class="drawer-item-desc">Halaman utama</span>
+      </div>
+    </button>
+
+    <button class="drawer-item" data-view="scfree">
+      <span class="drawer-item-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="8 8 4 12 8 16"/>
+          <polyline points="16 8 20 12 16 16"/>
+          <line x1="14" y1="4" x2="10" y2="20"/>
+        </svg>
+      </span>
+      <div class="drawer-item-text">
+        <span class="drawer-item-label">SC Free</span>
+        <span class="drawer-item-desc">Kumpulan script bot WA</span>
+      </div>
+    </button>
+
+    <button class="drawer-item" data-view="panel">
+      <span class="drawer-item-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </span>
+      <div class="drawer-item-text">
+        <span class="drawer-item-label">Panel Legal</span>
+        <span class="drawer-item-desc">Panel murah & legal</span>
+      </div>
+    </button>
+
+    <button class="drawer-item" data-view="pengaturan">
+      <span class="drawer-item-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </span>
+      <div class="drawer-item-text">
+        <span class="drawer-item-label">Pengaturan</span>
+        <span class="drawer-item-desc">Preferensi & info</span>
+      </div>
+    </button>
+  </nav>
+
+  <div class="drawer-footer">
+    © 2026 <a href="https://wa.me/6283185947823">VaLz</a> · v1.0
+  </div>
+</div>
+
+<!-- ============ HIDDEN YOUTUBE IFRAME ============ -->
+<div class="yt-hidden" id="ytHidden">
+  <iframe id="ytIframe"
+    width="1" height="1"
+    src=""
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen></iframe>
+</div>
 
 <div class="bg-image"></div>
 <div class="bg-overlay"></div>
 <div class="char-hint"></div>
 
 <div class="content">
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-badge">✦ 100% Free ✦</div>
-    <h1>VaLz <span>Store</span></h1>
-    <p>Kumpulan bot WhatsApp gratis siap pakai. Download, setup, dan langsung jalan!</p>
-    <div class="stats">
-      <div class="stat"><span class="stat-num" id="total-bots">0</span><span class="stat-lbl">Total Bot</span></div>
-      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Gratis</span></div>
-      <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">Support</span></div>
+
+  <!-- ============================================ -->
+  <!-- VIEW: DASHBOARD ============================================ -->
+  <div class="view active" id="view-dashboard">
+
+    <div class="hero">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        100% Free
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <h1>VaLz <span>Store</span></h1>
+      <p>Kumpulan bot WhatsApp gratis siap pakai. Download, setup, dan langsung jalan!</p>
+      <div class="stats">
+        <div class="stat"><span class="stat-num" id="total-bots">0</span><span class="stat-lbl">Total Bot</span></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Gratis</span></div>
+        <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">Support</span></div>
+      </div>
+      <a class="wa-channel" href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank">
+        <span class="wa-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/>
+            <path d="M16 8a5 5 0 0 1 0 8"/>
+            <path d="M19 5a9 9 0 0 1 0 14"/>
+          </svg>
+        </span>
+        <div class="wa-text">
+          <span class="wa-title">Saluran WhatsApp VaLz</span>
+          <span class="wa-sub">Update bot terbaru & info menarik</span>
+        </div>
+        <span class="wa-arrow">
+          <svg viewBox="0 0 24 24">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </a>
+      <div class="divider"></div>
     </div>
-    <a class="wa-channel" href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank">
-      <span class="wa-icon">📢</span>
-      <div class="wa-text">
-        <span class="wa-title">Saluran WhatsApp VaLz</span>
-        <span class="wa-sub">Update bot terbaru & info menarik</span>
+
+    <!-- PANEL SECTION -->
+    <div class="panel-section">
+      <div class="panel-label">Panel Legal &amp; Murah</div>
+      <p class="panel-sub">VaLz menyediakan panel hosting legal dengan harga terjangkau</p>
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </div>
+          <div class="panel-ram">5 GB</div>
+          <div class="panel-price">Rp 3.000</div>
+          <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%205GB" target="_blank">Beli</a>
+        </div>
+        <div class="panel-card popular">
+          <div class="panel-badge">Populer</div>
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </div>
+          <div class="panel-ram">6 GB</div>
+          <div class="panel-price">Rp 4.000</div>
+          <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%206GB" target="_blank">Beli</a>
+        </div>
+        <div class="panel-card">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </div>
+          <div class="panel-ram">10 GB</div>
+          <div class="panel-price">Rp 5.000</div>
+          <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%2010GB" target="_blank">Beli</a>
+        </div>
+        <div class="panel-card gold">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M18.178 8c-.676-1.5-2.15-2.5-3.96-2.5-1.016 0-1.897.29-2.616.81L12 6.7l-.602-.39C10.68 5.79 9.798 5.5 8.782 5.5c-1.81 0-3.284 1-3.96 2.5C4.146 9.5 4.146 12 6.218 14c2.072 2 5.782 4 5.782 4s3.71-2 5.782-4c2.072-2 2.072-4.5 1.396-6z"/>
+              <path d="M18.178 8c.676 1.5.676 4-1.396 6-2.072 2-5.782 4-5.782 4V6.7l.602-.39c.719-.52 1.6-.81 2.616-.81 1.81 0 3.284 1 3.96 2.5z"/>
+            </svg>
+          </div>
+          <div class="panel-ram">Unlimited</div>
+          <div class="panel-price">Rp 8.000</div>
+          <a class="panel-btn btn-gold" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%20Unlimited" target="_blank">Beli</a>
+        </div>
       </div>
-      <span class="wa-arrow">→</span>
-    </a>
-    <div class="divider"></div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <span class="search-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input type="text" id="search" placeholder="Cari bot..." oninput="filterBots()"/>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('all',this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter('multi-device',this)">Multi Device</button>
+      <button class="filter-btn" onclick="setFilter('javascript',this)">JavaScript</button>
+      <button class="filter-btn" onclick="setFilter('typescript',this)">TypeScript</button>
+      <button class="filter-btn" onclick="setFilter('new',this)">Terbaru</button>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid" id="grid"></div>
   </div>
 
-  <!-- PANEL SECTION -->
-  <div class="panel-section">
-    <div class="panel-label">⚔️ Panel Legal &amp; Murah</div>
-    <p class="panel-sub">VaLz menyediakan panel hosting legal dengan harga terjangkau</p>
-    <div class="panel-grid">
-      <div class="panel-card">
-        <div class="panel-icon">💾</div>
-        <div class="panel-ram">5 GB</div>
-        <div class="panel-price">Rp 3.000</div>
-        <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%205GB" target="_blank">Beli</a>
+  <!-- ============================================ -->
+  <!-- VIEW: SC FREE ============================================ -->
+  <div class="view" id="view-scfree">
+    <div class="page-header">
+      <div class="page-header-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="8 8 4 12 8 16"/>
+          <polyline points="16 8 20 12 16 16"/>
+          <line x1="14" y1="4" x2="10" y2="20"/>
+        </svg>
       </div>
-      <div class="panel-card popular">
-        <div class="panel-badge">Populer</div>
-        <div class="panel-icon">💾</div>
-        <div class="panel-ram">6 GB</div>
-        <div class="panel-price">Rp 4.000</div>
-        <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%206GB" target="_blank">Beli</a>
+      <h1 class="page-header-title">SC Free</h1>
+      <p class="page-header-sub">Kumpulan script bot WhatsApp gratis siap pakai</p>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input type="text" id="search2" placeholder="Cari script bot..." oninput="filterBots2()"/>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter2('all',this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter2('multi-device',this)">Multi Device</button>
+      <button class="filter-btn" onclick="setFilter2('javascript',this)">JavaScript</button>
+      <button class="filter-btn" onclick="setFilter2('typescript',this)">TypeScript</button>
+      <button class="filter-btn" onclick="setFilter2('new',this)">Terbaru</button>
+    </div>
+
+    <div class="grid" id="grid2"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- VIEW: PANEL LEGAL ============================================ -->
+  <div class="view" id="view-panel">
+    <div class="page-header">
+      <div class="page-header-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
       </div>
-      <div class="panel-card">
-        <div class="panel-icon">💾</div>
-        <div class="panel-ram">10 GB</div>
-        <div class="panel-price">Rp 5.000</div>
-        <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%2010GB" target="_blank">Beli</a>
+      <h1 class="page-header-title">Panel Legal</h1>
+      <p class="page-header-sub">Panel hosting legal dengan harga terjangkau</p>
+    </div>
+
+    <div class="panel-section" style="margin-top: 1.5rem;">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </div>
+          <div class="panel-ram">5 GB</div>
+          <div class="panel-price">Rp 3.000</div>
+          <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%205GB" target="_blank">Beli</a>
+        </div>
+        <div class="panel-card popular">
+          <div class="panel-badge">Populer</div>
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </div>
+          <div class="panel-ram">6 GB</div>
+          <div class="panel-price">Rp 4.000</div>
+          <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%206GB" target="_blank">Beli</a>
+        </div>
+        <div class="panel-card">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </div>
+          <div class="panel-ram">10 GB</div>
+          <div class="panel-price">Rp 5.000</div>
+          <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%2010GB" target="_blank">Beli</a>
+        </div>
+        <div class="panel-card gold">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M18.178 8c-.676-1.5-2.15-2.5-3.96-2.5-1.016 0-1.897.29-2.616.81L12 6.7l-.602-.39C10.68 5.79 9.798 5.5 8.782 5.5c-1.81 0-3.284 1-3.96 2.5C4.146 9.5 4.146 12 6.218 14c2.072 2 5.782 4 5.782 4s3.71-2 5.782-4c2.072-2 2.072-4.5 1.396-6z"/>
+              <path d="M18.178 8c.676 1.5.676 4-1.396 6-2.072 2-5.782 4-5.782 4V6.7l.602-.39c.719-.52 1.6-.81 2.616-.81 1.81 0 3.284 1 3.96 2.5z"/>
+            </svg>
+          </div>
+          <div class="panel-ram">Unlimited</div>
+          <div class="panel-price">Rp 8.000</div>
+          <a class="panel-btn btn-gold" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%20Unlimited" target="_blank">Beli</a>
+        </div>
       </div>
-      <div class="panel-card gold">
-        <div class="panel-icon">♾️</div>
-        <div class="panel-ram">Unlimited</div>
-        <div class="panel-price">Rp 8.000</div>
-        <a class="panel-btn btn-gold" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%20Unlimited" target="_blank">Beli</a>
-      </div>
+    </div>
+
+    <div class="panel-section" style="margin-top: 2rem;">
+      <div class="panel-label">Info Lebih Lanjut</div>
+      <p class="panel-sub">Hubungi admin untuk pemesanan & pertanyaan</p>
+      <a class="wa-channel" style="margin-top: 0.5rem;" href="https://wa.me/6283185947823?text=Halo%20VaLz%2C%20saya%20mau%20tanya%20soal%20panel" target="_blank">
+        <span class="wa-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </span>
+        <div class="wa-text">
+          <span class="wa-title">Chat Admin VaLz</span>
+          <span class="wa-sub">Respon cepat 24/7</span>
+        </div>
+        <span class="wa-arrow">
+          <svg viewBox="0 0 24 24">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </a>
     </div>
   </div>
 
-  <!-- SEARCH -->
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search" placeholder="Cari bot..." oninput="filterBots()"/>
+  <!-- ============================================ -->
+  <!-- VIEW: PENGATURAN ============================================ -->
+  <div class="view" id="view-pengaturan">
+    <div class="page-header">
+      <div class="page-header-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </div>
+      <h1 class="page-header-title">Pengaturan</h1>
+      <p class="page-header-sub">Atur preferensi website sesuai keinginanmu</p>
+    </div>
+
+    <div class="settings-wrap">
+
+      <!-- TAMPILAN -->
+      <div class="settings-section">
+        <div class="settings-section-title">
+          <span class="settings-title-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.7-.8 1.7-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.4-10-8.4z"/>
+            </svg>
+          </span>
+          Tampilan
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Mode Terang</div>
+            <div class="settings-row-desc">Ganti tema gelap ke tema terang yang lebih cerah</div>
+          </div>
+          <button class="settings-toggle" id="themeToggle" title="Ganti Tema"></button>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Musik Latar</div>
+            <div class="settings-row-desc">Putar musik saat membuka website</div>
+          </div>
+          <button class="settings-toggle" id="musicSettingToggle" title="Toggle Musik"></button>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Efek Animasi</div>
+            <div class="settings-row-desc">Aktifkan animasi & transisi halus</div>
+          </div>
+          <button class="settings-toggle on" id="animToggle" title="Toggle Animasi"></button>
+        </div>
+      </div>
+
+      <!-- INFO -->
+      <div class="settings-section">
+        <div class="settings-section-title">
+          <span class="settings-title-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+          </span>
+          Informasi
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Versi Website</div>
+            <div class="settings-row-desc">VaLz Store versi terbaru</div>
+          </div>
+          <span class="settings-version">v1.0.0</span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Developer</div>
+            <div class="settings-row-desc">Dibuat oleh VaLz</div>
+          </div>
+          <a class="settings-btn" href="https://wa.me/6283185947823" target="_blank">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Kontak
+          </a>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Saluran WhatsApp</div>
+            <div class="settings-row-desc">Update bot terbaru & info menarik</div>
+          </div>
+          <a class="settings-btn" href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/>
+              <path d="M16 8a5 5 0 0 1 0 8"/>
+              <path d="M19 5a9 9 0 0 1 0 14"/>
+            </svg>
+            Join
+          </a>
+        </div>
+      </div>
+
+      <!-- DATA -->
+      <div class="settings-section">
+        <div class="settings-section-title">
+          <span class="settings-title-icon">
+            <svg viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>
+              <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+            </svg>
+          </span>
+          Data
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Reset Pengaturan</div>
+            <div class="settings-row-desc">Kembalikan semua pengaturan ke default</div>
+          </div>
+          <button class="settings-btn danger" id="resetSettings">
+            <svg viewBox="0 0 24 24">
+              <polyline points="23 4 23 10 17 10"/>
+              <polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="settings-section">
+        <div class="settings-section-title">
+          <span class="settings-title-icon">
+            <svg viewBox="0 0 24 24">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </span>
+          Tentang
+        </div>
+        <p class="settings-about">
+          VaLz Store adalah platform kumpulan bot WhatsApp gratis & panel legal murah.
+          Semua script tersedia untuk dipelajari dan digunakan secara bebas.
+          Dikembangkan oleh VaLz.
+        </p>
+      </div>
+
+    </div>
   </div>
 
-  <!-- FILTERS -->
-  <div class="filters">
-    <button class="filter-btn active" onclick="setFilter('all',this)">Semua</button>
-    <button class="filter-btn" onclick="setFilter('multi-device',this)">Multi Device</button>
-    <button class="filter-btn" onclick="setFilter('javascript',this)">JavaScript</button>
-    <button class="filter-btn" onclick="setFilter('typescript',this)">TypeScript</button>
-    <button class="filter-btn" onclick="setFilter('new',this)">Terbaru</button>
-  </div>
-
-  <!-- GRID -->
-  <div class="grid" id="grid"></div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">✓ Link disalin!</div>
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  <span id="toastText">Link disalin</span>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -561,20 +1915,34 @@
 </footer>
 
 <script>
+// ============ SVG ICON TEMPLATES ============
+const ICONS = {
+  robot: '<svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2.5"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M9 17h6"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  puzzle: '<svg viewBox="0 0 24 24"><path d="M19 12h-2v-3a2 2 0 0 0-2-2h-3V5a2 2 0 1 0-4 0v2H5a2 2 0 0 0-2 2v3h2a2 2 0 1 1 0 4H3v3a2 2 0 0 0 2 2h3v-2a2 2 0 1 1 4 0v2h3a2 2 0 0 0 2-2v-3h2a2 2 0 1 0 0-4z"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'
+};
+
+// ============ DATA BOTS ============
 const BOTS = [
   {
     name: 'FURINA',
     version: 'v18',
-    desc: '6000+ FITUR',
-    icon: '🤖', iconBg: 'rgba(192,57,43,0.08)',
+    desc: '6000+ FITUR — bot WhatsApp all-in-one dengan ribuan fitur siap pakai.',
+    iconSvg: ICONS.robot,
+    iconColor: '#e74c3c',
+    iconBg: 'rgba(231,76,60,0.08)',
     tags: ['free','multi-device','javascript'],
-    link: 'https://www.mediafire.com/file/v5lsdmzej7iu32m/FURINA+V18+6488+FEATURE.zip/file', isNew: true, isHot: false
+    link: 'https://www.mediafire.com/file/v5lsdmzej7iu32m/FURINA+V18+6488+FEATURE.zip/file',
+    isNew: true, isHot: false
   },
   {
     name: 'VaLz MD',
     version: 'COMINGSOON',
     desc: 'Bot multi-device berbasis Baileys. Ringan, cepat, dan stabil untuk 24/7.',
-    icon: '⚡', iconBg: 'rgba(107,47,160,0.08)',
+    iconSvg: ICONS.bolt,
+    iconColor: '#b07fd6',
+    iconBg: 'rgba(176,127,214,0.08)',
     tags: ['free','multi-device','javascript'],
     link: '#', isNew: false, isHot: true
   },
@@ -582,7 +1950,9 @@ const BOTS = [
     name: 'SilFord Bot',
     version: 'v1.3.0',
     desc: 'Bot WA dengan sistem plugin modular. Mudah dikembangkan dan di-custom.',
-    icon: '🧩', iconBg: 'rgba(212,160,23,0.08)',
+    iconSvg: ICONS.puzzle,
+    iconColor: '#f0c040',
+    iconBg: 'rgba(240,192,64,0.08)',
     tags: ['free','multi-device','typescript'],
     link: '#', isNew: true, isHot: false
   },
@@ -590,68 +1960,366 @@ const BOTS = [
     name: 'NightBot WA',
     version: 'v0.9.5',
     desc: 'Bot dark-themed dengan AI reply otomatis dan fitur antisales & antispam.',
-    icon: '🌙', iconBg: 'rgba(107,47,160,0.08)',
+    iconSvg: ICONS.moon,
+    iconColor: '#9fc3ff',
+    iconBg: 'rgba(159,195,255,0.08)',
     tags: ['free','javascript'],
     link: '#', isNew: false, isHot: false
   },
 ];
 
 let currentFilter = 'all';
+let currentFilter2 = 'all';
 
-function renderBots(list) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  document.getElementById('total-bots').textContent = BOTS.length;
-  if (!list.length) { grid.innerHTML = '<div class="empty">😶 Tidak ada bot yang ditemukan.</div>'; return; }
+// ============ BUILD CARD ============
+function buildCard(bot) {
   const tagMap = { free:'tag-free','multi-device':'tag-md',javascript:'tag-js',typescript:'tag-ts' };
+  const tags = bot.tags.map(t => `<span class="tag ${tagMap[t]||'tag-free'}">${t}</span>`).join('');
+  const extras = (bot.isNew?'<span class="tag tag-new">new</span>':'')+(bot.isHot?'<span class="tag tag-hot">hot</span>':'');
+  return `
+    <div class="card-top">
+      <div class="card-icon" style="background:${bot.iconBg}; color:${bot.iconColor};">${bot.iconSvg}</div>
+      <div class="card-meta">
+        <div class="card-name">${bot.name}</div>
+        <div class="card-version">ver ${bot.version}</div>
+      </div>
+    </div>
+    <div class="card-desc">${bot.desc}</div>
+    <div class="card-tags">${tags}${extras}</div>
+    <div class="card-footer">
+      <a class="btn-dl" href="${bot.link}" target="_blank">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+      <button class="btn-copy" onclick="copyLink('${bot.link}')" title="Copy link">
+        <svg viewBox="0 0 24 24">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </button>
+    </div>`;
+}
+
+// ============ EMPTY STATE ============
+function emptyState() {
+  return `<div class="empty">
+    <svg viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <line x1="8" y1="11" x2="14" y2="11"/>
+    </svg>
+    <div>Tidak ada hasil ditemukan</div>
+  </div>`;
+}
+
+// ============ RENDER ============
+function renderBots(list, gridId) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  grid.innerHTML = '';
+  if (!list.length) { grid.innerHTML = emptyState(); return; }
   list.forEach(bot => {
-    const tags = bot.tags.map(t => `<span class="tag ${tagMap[t]||'tag-free'}">${t}</span>`).join('');
-    const extras = (bot.isNew?'<span class="tag tag-new">✦ new</span>':'')+(bot.isHot?'<span class="tag tag-hot">🔥 hot</span>':'');
     const card = document.createElement('div');
     card.className = 'card';
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="card-icon" style="background:${bot.iconBg}">${bot.icon}</div>
-        <div class="card-meta">
-          <div class="card-name">${bot.name}</div>
-          <div class="card-version">ver ${bot.version}</div>
-        </div>
-      </div>
-      <div class="card-desc">${bot.desc}</div>
-      <div class="card-tags">${tags}${extras}</div>
-      <div class="card-footer">
-        <a class="btn-dl" href="${bot.link}" target="_blank">⬇ Download</a>
-        <button class="btn-copy" onclick="copyLink('${bot.link}')">🔗</button>
-      </div>`;
+    card.innerHTML = buildCard(bot);
     grid.appendChild(card);
   });
 }
 
 function filterBots() {
   const q = document.getElementById('search').value.toLowerCase();
-  renderBots(BOTS.filter(b => {
+  const filtered = BOTS.filter(b => {
     const mf = currentFilter==='all'||b.tags.includes(currentFilter)||(currentFilter==='new'&&b.isNew);
     const ms = b.name.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q)||b.tags.some(t=>t.includes(q));
     return mf && ms;
-  }));
+  });
+  renderBots(filtered, 'grid');
+}
+
+function filterBots2() {
+  const q = document.getElementById('search2').value.toLowerCase();
+  const filtered = BOTS.filter(b => {
+    const mf = currentFilter2==='all'||b.tags.includes(currentFilter2)||(currentFilter2==='new'&&b.isNew);
+    const ms = b.name.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q)||b.tags.some(t=>t.includes(q));
+    return mf && ms;
+  });
+  renderBots(filtered, 'grid2');
 }
 
 function setFilter(f, btn) {
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   filterBots();
 }
 
+function setFilter2(f, btn) {
+  currentFilter2 = f;
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterBots2();
+}
+
 function copyLink(link) {
   navigator.clipboard.writeText(link).then(() => {
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 2000);
+    showToast('Link disalin ke clipboard');
   });
 }
 
-renderBots(BOTS);
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg || 'Link disalin';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+// Init
+renderBots(BOTS, 'grid');
+renderBots(BOTS, 'grid2');
+document.getElementById('total-bots').textContent = BOTS.length;
+
+// ============ PRELOADER ============
+(function() {
+  var preloader = document.getElementById('preloader');
+  var bar = document.getElementById('preloaderBar');
+  var percentEl = document.getElementById('preloaderPercent');
+  if (!preloader) return;
+
+  document.body.style.overflow = 'hidden';
+  var progress = 0, loaded = false;
+
+  var fakeProgress = setInterval(function() {
+    if (loaded) return;
+    var inc = progress < 50 ? 3 : progress < 75 ? 2 : progress < 90 ? 1 : 0.3;
+    progress = Math.min(progress + inc, 90);
+    updateProgress(progress);
+  }, 100);
+
+  function updateProgress(val) {
+    if (bar) bar.style.width = val + '%';
+    if (percentEl) percentEl.textContent = Math.floor(val) + '%';
+  }
+
+  function finishLoading() {
+    if (loaded) return;
+    loaded = true;
+    clearInterval(fakeProgress);
+    var jump = setInterval(function() {
+      progress = Math.min(progress + 5, 100);
+      updateProgress(progress);
+      if (progress >= 100) {
+        clearInterval(jump);
+        setTimeout(function() {
+          preloader.classList.add('hidden');
+          document.body.style.overflow = '';
+          setTimeout(function() {
+            if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
+          }, 700);
+        }, 400);
+      }
+    }, 30);
+  }
+
+  if (document.readyState === 'complete') {
+    setTimeout(finishLoading, 1000);
+  } else {
+    window.addEventListener('load', function() { setTimeout(finishLoading, 1000); });
+  }
+  setTimeout(finishLoading, 6000);
+})();
+
+// ============ DRAWER ============
+(function() {
+  var menuBtn = document.getElementById('menuBtn');
+  var drawer = document.getElementById('drawer');
+  var overlay = document.getElementById('drawerOverlay');
+  var items = document.querySelectorAll('.drawer-item');
+  var views = document.querySelectorAll('.view');
+
+  function openDrawer() {
+    drawer.classList.add('show');
+    overlay.classList.add('show');
+    menuBtn.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('show');
+    overlay.classList.remove('show');
+    menuBtn.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function switchView(viewName) {
+    views.forEach(function(v) { v.classList.remove('active'); });
+    var target = document.getElementById('view-' + viewName);
+    if (target) target.classList.add('active');
+
+    items.forEach(function(i) {
+      i.classList.toggle('active', i.dataset.view === viewName);
+    });
+
+    if (viewName === 'scfree') {
+      filterBots2();
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  menuBtn.addEventListener('click', function() {
+    if (drawer.classList.contains('show')) closeDrawer();
+    else openDrawer();
+  });
+
+  overlay.addEventListener('click', closeDrawer);
+
+  items.forEach(function(item) {
+    item.addEventListener('click', function() {
+      var view = item.dataset.view;
+      switchView(view);
+      closeDrawer();
+    });
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && drawer.classList.contains('show')) closeDrawer();
+  });
+})();
+
+// ============ MUSIC PLAYER ============
+(function() {
+  var VIDEO_ID = 'agneRtEe-t8';
+  var isPlaying = false;
+
+  var musicToggle = document.getElementById('musicToggle');
+  var musicDot = document.getElementById('musicDot');
+  var musicStatusText = document.getElementById('musicStatusText');
+  var ytIframe = document.getElementById('ytIframe');
+
+  function buildUrl(autoplay) {
+    return 'https://www.youtube.com/embed/' + VIDEO_ID +
+      '?autoplay=' + (autoplay ? '1' : '0') +
+      '&loop=1' +
+      '&playlist=' + VIDEO_ID +
+      '&controls=0' +
+      '&modestbranding=1' +
+      '&rel=0' +
+      '&playsinline=1' +
+      '&iv_load_policy=3' +
+      '&disablekb=1' +
+      '&fs=0';
+  }
+
+  window.updateMusicUI = function() {
+    var iconPlay = document.getElementById('musicIconPlay');
+    var iconEq = document.getElementById('musicIconEq');
+    var settingToggle = document.getElementById('musicSettingToggle');
+
+    if (isPlaying) {
+      if (iconPlay) iconPlay.style.display = 'none';
+      if (iconEq) iconEq.style.display = 'flex';
+      musicToggle.classList.add('playing');
+      musicDot.classList.add('on');
+      musicStatusText.textContent = 'Now Playing';
+      if (settingToggle) settingToggle.classList.add('on');
+    } else {
+      if (iconPlay) iconPlay.style.display = 'block';
+      if (iconEq) iconEq.style.display = 'none';
+      musicToggle.classList.remove('playing');
+      musicDot.classList.remove('on');
+      musicStatusText.textContent = 'Paused';
+      if (settingToggle) settingToggle.classList.remove('on');
+    }
+  }
+
+  window.playMusic = function() {
+    ytIframe.src = buildUrl(true);
+    isPlaying = true;
+    updateMusicUI();
+  }
+
+  window.pauseMusic = function() {
+    ytIframe.src = '';
+    isPlaying = false;
+    updateMusicUI();
+  }
+
+  musicToggle.addEventListener('click', function() {
+    if (isPlaying) pauseMusic();
+    else playMusic();
+  });
+
+  updateMusicUI();
+})();
+
+// ============ SETTINGS ============
+(function() {
+  var themeToggle = document.getElementById('themeToggle');
+  var musicSettingToggle = document.getElementById('musicSettingToggle');
+  var animToggle = document.getElementById('animToggle');
+  var resetBtn = document.getElementById('resetSettings');
+
+  var savedTheme = localStorage.getItem('valz-theme') || 'dark';
+  var savedAnim = localStorage.getItem('valz-anim') !== 'off';
+
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    themeToggle.classList.add('on');
+  }
+  if (savedAnim) {
+    animToggle.classList.add('on');
+  } else {
+    animToggle.classList.remove('on');
+    document.body.classList.add('no-anim');
+  }
+
+  themeToggle.addEventListener('click', function() {
+    var isLight = document.body.classList.toggle('light-theme');
+    themeToggle.classList.toggle('on', isLight);
+    localStorage.setItem('valz-theme', isLight ? 'light' : 'dark');
+  });
+
+  musicSettingToggle.addEventListener('click', function() {
+    var iconEq = document.getElementById('musicIconEq');
+    var isPlaying = iconEq && iconEq.style.display !== 'none';
+    if (isPlaying) pauseMusic();
+    else playMusic();
+  });
+
+  animToggle.addEventListener('click', function() {
+    var isOn = animToggle.classList.toggle('on');
+    document.body.classList.toggle('no-anim', !isOn);
+    localStorage.setItem('valz-anim', isOn ? 'on' : 'off');
+  });
+
+  resetBtn.addEventListener('click', function() {
+    if (confirm('Reset semua pengaturan ke default?')) {
+      localStorage.removeItem('valz-theme');
+      localStorage.removeItem('valz-anim');
+      document.body.classList.remove('light-theme');
+      document.body.classList.remove('no-anim');
+      themeToggle.classList.remove('on');
+      animToggle.classList.add('on');
+      showToast('Pengaturan direset ke default');
+    }
+  });
+})();
 </script>
+
+<style>
+  body.no-anim *,
+  body.no-anim *::before,
+  body.no-anim *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+</style>
+
 </body>
 </html>
