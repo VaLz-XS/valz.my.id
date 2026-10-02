@@ -1,2443 +1,657 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 Game Zone by VaLz</title>
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  :root {
-    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --card-bg: #ffffff;
-    --text-color: #333;
-    --text-muted: #666;
-    --primary: #764ba2;
-    --primary-hover: #667eea;
-    --secondary-bg: #f8f8f8;
-    --secondary-bg-hover: #e0e0e0;
-    --cell-bg: #f0f0f0;
-    --border-color: #ddd;
-    --shadow: 0 20px 60px rgba(0,0,0,0.3);
-    --wa-color: #25D366;
-  }
-
-  [data-theme="dark"] {
-    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    --card-bg: #1e2749;
-    --text-color: #e0e0e0;
-    --text-muted: #a0a0a0;
-    --primary: #8b5fbf;
-    --primary-hover: #a07cd0;
-    --secondary-bg: #2a3550;
-    --secondary-bg-hover: #3a4568;
-    --cell-bg: #2a3550;
-    --border-color: #3a4568;
-    --shadow: 0 20px 60px rgba(0,0,0,0.6);
-  }
-
-  body {
-    background: var(--bg-gradient);
-    min-height: 100vh;
-    padding: 20px;
-    padding-bottom: 120px;
-    color: var(--text-color);
-  }
-
-  header {
-    text-align: center;
-    color: white;
-    margin-bottom: 20px;
-  }
-
-  header h1 {
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-    margin-bottom: 10px;
-  }
-
-  header p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-  }
-
-  .developer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 12px;
-    padding: 8px 18px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 25px;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: bold;
-    transition: 0.3s;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .developer-badge:hover {
-    background: rgba(255,255,255,0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  }
-
-  .developer-badge .dev-name {
-    color: #ffd700;
-    text-shadow: 0 0 10px rgba(255,215,0,0.5);
-  }
-
-  .top-controls {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 100;
-  }
-
-  .top-btn {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    border: none;
-    background: var(--card-bg);
-    color: var(--text-color);
-    font-size: 1.4rem;
-    cursor: pointer;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .top-btn:hover {
-    transform: scale(1.15);
-  }
-
-  .top-btn.playing::after {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 2px solid #ffd700;
-    animation: pulse 1.2s infinite;
-  }
-
-  @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(1.3); opacity: 0; }
-  }
-
-  .profile-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: var(--secondary-bg);
-    border-radius: 15px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-  }
-
-  .profile-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    flex-shrink: 0;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    cursor: pointer;
-    transition: 0.3s;
-    border: 3px solid var(--card-bg);
-  }
-
-  .profile-avatar:hover {
-    transform: scale(1.08);
-    border-color: #ffd700;
-  }
-
-  .profile-info {
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .profile-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary);
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .edit-btn {
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    font-weight: normal;
-  }
-
-  .edit-btn:hover { background: var(--primary-hover); }
-
-  .profile-subtitle {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 12px;
-  }
-
-  .profile-stats {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-
-  .stat-item {
-    background: var(--card-bg);
-    padding: 8px 15px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  .stat-item span {
-    color: var(--primary);
-    font-size: 1.1rem;
-  }
-
-  .music-panel {
-    background: var(--secondary-bg);
-    padding: 15px 20px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-
-  .music-now {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .music-icon {
-    font-size: 1.8rem;
-    animation: spin 3s linear infinite;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  .music-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .music-title {
-    font-weight: bold;
-    color: var(--primary);
-    font-size: 0.95rem;
-  }
-
-  .music-subtitle {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-  }
-
-  .music-controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .music-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: var(--primary);
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .music-btn:hover {
-    background: var(--primary-hover);
-    transform: scale(1.1);
-  }
-
-  .music-volume {
-    width: 100px;
-    height: 5px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: var(--border-color);
-    border-radius: 5px;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .music-volume::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: var(--primary);
-    cursor: pointer;
-  }
-
-  .menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-
-  .menu button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px;
-    background: var(--card-bg);
-    color: var(--primary);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    font-size: 0.9rem;
-  }
-
-  .menu button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  }
-
-  .menu button.active {
-    background: #ffd700;
-    color: #333;
-  }
-
-  .game-container {
-    max-width: 850px;
-    margin: 0 auto;
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: var(--shadow);
-  }
-
-  .game {
-    display: none;
-  }
-
-  .game.active {
-    display: block;
-    animation: fadeIn 0.4s;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .game h2 {
-    color: var(--primary);
-    margin-bottom: 15px;
-    text-align: center;
-  }
-
-  .game p.info {
-    text-align: center;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-  }
-
-  .btn {
-    padding: 12px 25px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    margin: 5px;
-  }
-
-  .btn:hover {
-    background: var(--primary-hover);
-    transform: scale(1.05);
-  }
-
-  .btn-secondary { background: var(--text-muted); }
-
-  .guess-input {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-
-  .guess-input input {
-    padding: 12px;
-    font-size: 1rem;
-    border: 2px solid var(--primary);
-    border-radius: 10px;
-    width: 150px;
-    text-align: center;
-    background: var(--card-bg);
-    color: var(--text-color);
-  }
-
-  #guessResult {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    min-height: 30px;
-    margin: 10px 0;
-  }
-
-  #guessHistory {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-  }
-
-  .rps-choices {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 25px 0;
-    flex-wrap: wrap;
-  }
-
-  .rps-btn {
-    font-size: 3rem;
-    background: var(--cell-bg);
-    border: 3px solid transparent;
-    border-radius: 20px;
-    padding: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .rps-btn:hover {
-    background: var(--primary);
-    transform: scale(1.1);
-  }
-
-  .rps-result {
-    text-align: center;
-    font-size: 1.3rem;
-    margin: 20px 0;
-    min-height: 40px;
-  }
-
-  .rps-score {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-    padding: 15px;
-    background: var(--secondary-bg);
-    border-radius: 10px;
-    font-weight: bold;
-  }
-
-  .ttt-board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-gap: 8px;
-    justify-content: center;
-    margin: 20px 0;
-  }
-
-  .ttt-cell {
-    width: 100px;
-    height: 100px;
-    font-size: 3rem;
-    font-weight: bold;
-    background: var(--cell-bg);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-    color: var(--primary);
-  }
-
-  .ttt-cell:hover { background: var(--secondary-bg-hover); }
-  .ttt-cell:disabled { cursor: not-allowed; }
-
-  .ttt-status {
-    text-align: center;
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin: 15px 0;
-    color: var(--primary);
-  }
-
-  .memory-board {
-    display: grid;
-    grid-template-columns: repeat(4, 80px);
-    grid-gap: 10px;
-    justify-content: center;
-    margin: 20px 0;
-  }
-
-  .memory-card {
-    width: 80px;
-    height: 80px;
-    font-size: 2rem;
-    background: var(--primary);
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    color: transparent;
-  }
-
-  .memory-card.flipped {
-    background: #ffd700;
-    color: #333;
-  }
-
-  .memory-card.matched {
-    background: #4caf50;
-    color: white;
-    cursor: default;
-  }
-
-  .memory-info, .game-info {
-    text-align: center;
-    font-size: 1.1rem;
-    margin: 10px 0;
-    font-weight: bold;
-    color: var(--primary);
-  }
-
-  .quiz-question {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 20px 0;
-    text-align: center;
-  }
-
-  .quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-  }
-
-  .quiz-option {
-    padding: 15px;
-    background: var(--cell-bg);
-    border: 2px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 1rem;
-    text-align: left;
-    color: var(--text-color);
-  }
-
-  .quiz-option:hover {
-    background: var(--secondary-bg-hover);
-    border-color: var(--primary);
-  }
-
-  .quiz-option.correct { background: #4caf50; color: white; }
-  .quiz-option.wrong { background: #f44336; color: white; }
-
-  .dice-display {
-    text-align: center;
-    font-size: 8rem;
-    margin: 20px 0;
-  }
-
-  .dice-display.rolling { animation: shake 0.3s infinite; }
-
-  @keyframes shake {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    75% { transform: rotate(15deg); }
-  }
-
-  .color-box {
-    width: 200px;
-    height: 200px;
-    margin: 20px auto;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    transition: 0.3s;
-  }
-
-  .color-options {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    max-width: 400px;
-    margin: 20px auto;
-  }
-
-  .color-option {
-    padding: 20px;
-    border: 3px solid var(--border-color);
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: 0.3s;
-    background: var(--card-bg);
-    color: var(--text-color);
-  }
-
-  .color-option:hover { transform: scale(1.05); }
-  .color-option.correct { border-color: #4caf50; background: #e8f5e9; color: #333; }
-  .color-option.wrong { border-color: #f44336; background: #ffebee; color: #333; }
-
-  .simon-board {
-    display: grid;
-    grid-template-columns: repeat(2, 130px);
-    gap: 15px;
-    justify-content: center;
-    margin: 25px 0;
-  }
-
-  .simon-btn {
-    width: 130px;
-    height: 130px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: 0.2s;
-  }
-
-  .simon-btn.active {
-    opacity: 1;
-    transform: scale(1.05);
-    box-shadow: 0 0 30px currentColor;
-  }
-
-  .simon-btn:disabled { cursor: not-allowed; }
-  .simon-green { background: #4caf50; color: #4caf50; }
-  .simon-red { background: #f44336; color: #f44336; }
-  .simon-yellow { background: #ffeb3b; color: #ffeb3b; }
-  .simon-blue { background: #2196f3; color: #2196f3; }
-
-  .click-area {
-    position: relative;
-    height: 400px;
-    background: var(--secondary-bg);
-    border-radius: 15px;
-    margin: 20px 0;
-    overflow: hidden;
-    border: 2px dashed var(--primary);
-  }
-
-  .click-target {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #ffd700, #ff9800);
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-  }
-
-  .hangman-word {
-    text-align: center;
-    font-size: 2.5rem;
-    letter-spacing: 15px;
-    font-weight: bold;
-    color: var(--primary);
-    margin: 20px 0;
-    font-family: monospace;
-  }
-
-  .hangman-info {
-    text-align: center;
-    font-size: 1.2rem;
-    margin: 10px 0;
-    font-weight: bold;
-  }
-
-  .hangman-letters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    max-width: 600px;
-    margin: 20px auto;
-  }
-
-  .letter-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 8px;
-    background: var(--primary);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 1rem;
-  }
-
-  .letter-btn:hover:not(:disabled) {
-    background: var(--primary-hover);
-    transform: scale(1.1);
-  }
-
-  .letter-btn:disabled {
-    background: var(--text-muted);
-    cursor: not-allowed;
-  }
-
-  .letter-btn.correct { background: #4caf50; }
-  .letter-btn.wrong { background: #f44336; }
-
-  .leaderboard-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .lb-tab {
-    padding: 8px 16px;
-    border: 2px solid var(--primary);
-    border-radius: 20px;
-    background: transparent;
-    color: var(--primary);
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 0.85rem;
-  }
-
-  .lb-tab:hover, .lb-tab.active {
-    background: var(--primary);
-    color: white;
-  }
-
-  .lb-table-wrapper {
-    max-height: 450px;
-    overflow-y: auto;
-    border-radius: 12px;
-    background: var(--secondary-bg);
-    padding: 10px;
-  }
-
-  .lb-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .lb-table th, .lb-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
-  }
-
-  .lb-table th {
-    background: var(--primary);
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-
-  .lb-table tr:hover td { background: var(--secondary-bg-hover); }
-
-  .lb-rank {
-    font-weight: bold;
-    font-size: 1.2rem;
-    width: 60px;
-    text-align: center;
-  }
-
-  .lb-rank.gold { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
-  .lb-rank.silver { color: #c0c0c0; text-shadow: 0 0 10px #c0c0c0; }
-  .lb-rank.bronze { color: #cd7f32; text-shadow: 0 0 10px #cd7f32; }
-
-  .lb-score {
-    font-weight: bold;
-    color: var(--primary);
-    font-size: 1.05rem;
-  }
-
-  .lb-empty {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  .lb-actions {
-    text-align: center;
-    margin-top: 20px;
-  }
-
-  .modal-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 20px;
-  }
-
-  .modal-overlay.active {
-    display: flex;
-    animation: fadeIn 0.3s;
-  }
-
-  .modal {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    text-align: center;
-    animation: slideUp 0.3s;
-  }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .modal h3 {
-    color: var(--primary);
-    font-size: 1.6rem;
-    margin-bottom: 15px;
-  }
-
-  .modal p {
-    margin-bottom: 20px;
-    color: var(--text-muted);
-  }
-
-  .modal .score-display {
-    font-size: 3rem;
-    font-weight: bold;
-    color: var(--primary);
-    margin: 20px 0;
-    text-shadow: 0 0 20px rgba(118, 75, 162, 0.3);
-  }
-
-  .modal input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid var(--primary);
-    border-radius: 10px;
-    font-size: 1rem;
-    margin-bottom: 15px;
-    background: var(--card-bg);
-    color: var(--text-color);
-    text-align: center;
-  }
-
-  .modal input:focus {
-    outline: none;
-    border-color: #ffd700;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-  }
-
-  .modal-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-
-  .modal-buttons .btn {
-    flex: 1;
-    margin: 0;
-  }
-
-  .avatar-picker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 15px 0;
-    justify-content: center;
-  }
-
-  .avatar-option {
-    width: 50px;
-    height: 50px;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    background: var(--secondary-bg);
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .avatar-option:hover {
-    transform: scale(1.1);
-    border-color: var(--primary);
-  }
-
-  .avatar-option.selected {
-    border-color: #ffd700;
-    background: var(--primary);
-    transform: scale(1.1);
-  }
-
-  /* ====== FOOTER ====== */
-  .site-footer {
-    max-width: 850px;
-    margin: 30px auto 0;
-    padding: 25px 20px;
-    background: var(--card-bg);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    color: var(--text-color);
-  }
-
-  .footer-developer {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    color: var(--text-muted);
-  }
-
-  .footer-developer .dev-name-big {
-    color: var(--primary);
-    font-weight: bold;
-    font-size: 1.4rem;
-    text-shadow: 0 0 15px rgba(118, 75, 162, 0.4);
-    letter-spacing: 1px;
-  }
-
-  .footer-wa {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 25px;
-    background: var(--wa-color);
-    color: white;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 1rem;
-    margin: 10px 5px;
-    transition: all 0.3s;
-    box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
-  }
-
-  .footer-wa:hover {
-    background: #128C7E;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6);
-  }
-
-  .footer-wa svg {
-    width: 22px;
-    height: 22px;
-    fill: currentColor;
-  }
-
-  .footer-copy {
-    margin-top: 15px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    opacity: 0.8;
-  }
-
-  /* ====== FLOATING WA BUTTON ====== */
-  .wa-float {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    background: var(--wa-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
-    text-decoration: none;
-    z-index: 90;
-    transition: all 0.3s;
-    animation: bounce 2s infinite;
-  }
-
-  .wa-float:hover {
-    background: #128C7E;
-    transform: scale(1.15) rotate(10deg);
-    animation: none;
-  }
-
-  .wa-float svg {
-    width: 32px;
-    height: 32px;
-    fill: white;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-
-  .wa-float::before {
-    content: 'Saluran WhatsApp';
-    position: absolute;
-    right: 75px;
-    background: var(--card-bg);
-    color: var(--text-color);
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.3s;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  }
-
-  .wa-float:hover::before {
-    opacity: 1;
-    right: 70px;
-  }
-
-  @media (max-width: 600px) {
-    header h1 { font-size: 1.8rem; }
-    .game-container { padding: 20px; }
-    .ttt-board { grid-template-columns: repeat(3, 80px); }
-    .ttt-cell { width: 80px; height: 80px; font-size: 2rem; }
-    .memory-board { grid-template-columns: repeat(4, 60px); }
-    .memory-card { width: 60px; height: 60px; font-size: 1.5rem; }
-    .dice-display { font-size: 5rem; }
-    .hangman-word { font-size: 1.8rem; letter-spacing: 8px; }
-    .simon-board { grid-template-columns: repeat(2, 110px); }
-    .simon-btn { width: 110px; height: 110px; }
-    .top-controls { top: 10px; right: 10px; }
-    .top-btn { width: 45px; height: 45px; font-size: 1.2rem; }
-    .profile-avatar { width: 80px; height: 80px; font-size: 2.4rem; }
-    .music-volume { width: 70px; }
-    .footer-developer .dev-name-big { font-size: 1.2rem; }
-    .wa-float { width: 55px; height: 55px; bottom: 20px; right: 20px; }
-    .wa-float svg { width: 28px; height: 28px; }
-    .wa-float::before { display: none; }
-  }
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>VaLz Xixi | Free WA Bot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0a14;
+      --surface: rgba(15,10,25,0.85);
+      --card: rgba(18,12,30,0.88);
+      --border: rgba(180,30,40,0.25);
+      --border-hover: rgba(180,30,40,0.55);
+      --red: #c0392b;
+      --red-bright: #e74c3c;
+      --gold: #d4a017;
+      --gold-bright: #f0c040;
+      --purple: #6b2fa0;
+      --purple-dim: rgba(107,47,160,0.3);
+      --cream: #e8e0d0;
+      --text: #a09080;
+      --text-bright: #e8e0d0;
+      --glow-red: rgba(192,57,43,0.2);
+      --glow-gold: rgba(212,160,23,0.2);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background image */
+    .bg-image {
+      position: fixed;
+      inset: 0;
+      background: url('bg.jpg') center center / cover no-repeat;
+      z-index: 0;
+      filter: brightness(0.18) saturate(0.7);
+    }
+
+    /* Overlay gradient */
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 40%, rgba(107,47,160,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(13,10,20,0.5) 0%, rgba(13,10,20,0.85) 100%);
+      z-index: 1;
+    }
+
+    /* Scanline */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px);
+      pointer-events: none; z-index: 998;
+    }
+
+    /* All content above bg */
+    .content { position: relative; z-index: 10; }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.25rem 1rem;
+      border: 1px solid var(--red);
+      border-radius: 999px;
+      font-size: 0.68rem;
+      color: var(--red-bright);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 12px var(--glow-red);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    }
+    .hero h1 span {
+      color: var(--gold-bright);
+      text-shadow: 0 0 30px rgba(212,160,23,0.5);
+    }
+    .hero p {
+      font-size: 0.88rem;
+      color: var(--text);
+      max-width: 380px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.7;
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      display: block;
+      text-shadow: 0 0 16px var(--glow-gold);
+    }
+    .stat-lbl {
+      font-size: 0.62rem;
+      color: #5a4a3a;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Divider */
+    .divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--red), transparent);
+      margin: 0 auto 2rem;
+    }
+
+    /* ─── SEARCH ─── */
+    .search-wrap {
+      max-width: 420px;
+      margin: 0 auto 1.5rem;
+      padding: 0 1rem;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.72rem 1rem 0.72rem 2.5rem;
+      background: rgba(13,10,20,0.8);
+      border: 1px solid rgba(180,30,40,0.2);
+      border-radius: 12px;
+      color: var(--cream);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      outline: none;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-wrap input:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 16px var(--glow-red);
+    }
+    .search-wrap input::placeholder { color: #3a2a2a; }
+    .search-icon { position: absolute; left: 1.9rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #3a2a2a; }
+
+    /* ─── FILTERS ─── */
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 1rem;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(180,30,40,0.15);
+      background: transparent;
+      color: #4a3535;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      border-color: var(--red);
+      color: var(--red-bright);
+      background: var(--glow-red);
+      box-shadow: 0 0 10px var(--glow-red);
+    }
+
+    /* ─── GRID ─── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem 5rem;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Red left accent line */
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--red), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 20px var(--glow-red);
+      transform: translateY(-2px);
+    }
+
+    .card-top { display: flex; align-items: flex-start; gap: 0.75rem; }
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(180,30,40,0.2);
+    }
+    .card-meta { flex: 1; min-width: 0; }
+    .card-name { font-size: 0.95rem; font-weight: 700; color: var(--cream); margin-bottom: 0.15rem; }
+    .card-version { font-size: 0.62rem; color: #4a3535; letter-spacing: 1px; }
+
+    .card-desc { font-size: 0.78rem; color: #7a6050; line-height: 1.65; }
+
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .tag {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .tag-free { background: rgba(192,57,43,0.1); color: var(--red-bright); border: 1px solid rgba(192,57,43,0.25); }
+    .tag-md   { background: rgba(107,47,160,0.12); color: #9b59b6; border: 1px solid rgba(107,47,160,0.25); }
+    .tag-js   { background: rgba(212,160,23,0.1); color: var(--gold); border: 1px solid rgba(212,160,23,0.25); }
+    .tag-ts   { background: rgba(100,150,255,0.1); color: #7fb3ff; border: 1px solid rgba(100,150,255,0.2); }
+    .tag-hot  { background: rgba(192,57,43,0.15); color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); }
+    .tag-new  { background: rgba(212,160,23,0.1); color: var(--gold-bright); border: 1px solid rgba(212,160,23,0.3); }
+
+    .card-footer { display: flex; gap: 0.5rem; margin-top: auto; }
+    .btn-dl {
+      flex: 1;
+      padding: 0.55rem;
+      background: linear-gradient(135deg, var(--red), #8b1a1a);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+      transition: all 0.15s;
+      box-shadow: 0 0 14px rgba(192,57,43,0.3);
+    }
+    .btn-dl:hover { box-shadow: 0 0 24px rgba(192,57,43,0.5); transform: translateY(-1px); }
+    .btn-copy {
+      padding: 0.55rem 0.75rem;
+      background: transparent;
+      color: #4a3535;
+      border: 1px solid rgba(180,30,40,0.15);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { border-color: var(--red); color: var(--red-bright); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: linear-gradient(135deg, var(--red), #8b1a1a);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 999px;
+      z-index: 9999;
+      transition: transform 0.3s;
+      pointer-events: none;
+      box-shadow: 0 0 20px rgba(192,57,43,0.4);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Empty */
+    .empty { grid-column: 1/-1; text-align: center; padding: 3rem; color: #2a1a1a; font-size: 0.85rem; }
+
+    /* Footer */
+    footer {
+      position: relative; z-index: 10;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.7rem;
+      color: #2a1a1a;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(180,30,40,0.1);
+    }
+    footer a { color: var(--red); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    /* ─── PANEL SECTION ─── */
+    .panel-section {
+      max-width: 900px;
+      margin: 0 auto 2.5rem;
+      padding: 0 1rem;
+      text-align: center;
+    }
+    .panel-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+    }
+    .panel-sub {
+      font-size: 0.75rem;
+      color: #4a3535;
+      margin-bottom: 1.25rem;
+      letter-spacing: 0.3px;
+    }
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+    .panel-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      backdrop-filter: blur(12px);
+      position: relative;
+      transition: all 0.2s;
+    }
+    .panel-card:hover {
+      border-color: var(--red);
+      box-shadow: 0 4px 20px rgba(192,57,43,0.2);
+      transform: translateY(-2px);
+    }
+    .panel-card.popular {
+      border-color: rgba(192,57,43,0.4);
+      box-shadow: 0 0 20px rgba(192,57,43,0.1);
+    }
+    .panel-card.gold {
+      border-color: rgba(212,160,23,0.3);
+      box-shadow: 0 0 20px rgba(212,160,23,0.08);
+    }
+    .panel-card.gold:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(212,160,23,0.25);
+    }
+    .panel-badge {
+      position: absolute;
+      top: -10px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--red);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 0 10px rgba(192,57,43,0.4);
+    }
+    .panel-icon { font-size: 1.4rem; }
+    .panel-ram {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cream);
+    }
+    .panel-price {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--red-bright);
+    }
+    .panel-card.gold .panel-price { color: var(--gold-bright); }
+    .panel-btn {
+      margin-top: 0.3rem;
+      padding: 0.4rem 1.1rem;
+      background: linear-gradient(135deg, var(--red), #8b1a1a);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      box-shadow: 0 0 10px rgba(192,57,43,0.2);
+    }
+    .panel-btn:hover { box-shadow: 0 0 18px rgba(192,57,43,0.4); }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #8b6000);
+      box-shadow: 0 0 10px rgba(212,160,23,0.2);
+    }
+    .btn-gold:hover { box-shadow: 0 0 18px rgba(212,160,23,0.4); }
+
+    /* WA Channel */
+    .wa-channel {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 340px;
+      margin: 0 auto 1.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(18,55,18,0.3);
+      border: 1px solid rgba(37,211,102,0.2);
+      border-radius: 14px;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .wa-channel:hover {
+      border-color: rgba(37,211,102,0.5);
+      background: rgba(18,55,18,0.5);
+      box-shadow: 0 0 20px rgba(37,211,102,0.15);
+      transform: translateY(-1px);
+    }
+    .wa-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .wa-text { display: flex; flex-direction: column; flex: 1; text-align: left; }
+    .wa-title { font-size: 0.82rem; font-weight: 700; color: #25d366; }
+    .wa-sub { font-size: 0.65rem; color: #2a5a2a; letter-spacing: 0.3px; margin-top: 0.1rem; }
+    .wa-arrow { color: #25d366; font-size: 0.9rem; opacity: 0.6; flex-shrink: 0; }
+
+    /* Character watermark bottom-right */
+    .char-hint {
+      position: fixed;
+      bottom: 0; right: 0;
+      width: min(200px, 40vw);
+      height: min(300px, 60vh);
+      background: url('bg.jpg') center top / cover no-repeat;
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.15), transparent),
+                  linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.12), transparent);
+      opacity: 0.12;
+      z-index: 2;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
 
-<div class="top-controls">
-  <button class="top-btn" id="musicToggle" title="Musik On/Off">🔇</button>
-  <button class="top-btn" id="themeToggle" title="Ganti Tema">🌙</button>
-</div>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="char-hint"></div>
 
-<header>
-  <h1>🎮 Game Zone</h1>
-  <p>10 Games + Leaderboard + Profile + Musik</p>
-  <a href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank" rel="noopener" class="developer-badge">
-    👨‍💻 Developer: <span class="dev-name">VaLz</span> — 📢 Join Saluran WA
-  </a>
-</header>
-
-<div class="game-container" style="margin-bottom: 20px;">
-  <div class="profile-card">
-    <div class="profile-avatar" id="profileAvatar" title="Klik untuk ganti avatar">😎</div>
-    <div class="profile-info">
-      <div class="profile-name">
-        <span id="profileName">Pemain Baru</span>
-        <button class="edit-btn" id="editProfileBtn">✏️ Edit</button>
+<div class="content">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">✦ 100% Free ✦</div>
+    <h1>VaLz <span>Store</span></h1>
+    <p>Kumpulan bot WhatsApp gratis siap pakai. Download, setup, dan langsung jalan!</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-num" id="total-bots">0</span><span class="stat-lbl">Total Bot</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Gratis</span></div>
+      <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">Support</span></div>
+    </div>
+    <a class="wa-channel" href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank">
+      <span class="wa-icon">📢</span>
+      <div class="wa-text">
+        <span class="wa-title">Saluran WhatsApp VaLz</span>
+        <span class="wa-sub">Update bot terbaru & info menarik</span>
       </div>
-      <div class="profile-subtitle" id="profileSubtitle">Bergabung: hari ini</div>
-      <div class="profile-stats">
-        <div class="stat-item">🎮 <span id="statGames">0</span> Game</div>
-        <div class="stat-item">🏆 <span id="statBest">0</span> Skor Terbaik</div>
-        <div class="stat-item">⭐ <span id="statTotal">0</span> Total Skor</div>
+      <span class="wa-arrow">→</span>
+    </a>
+    <div class="divider"></div>
+  </div>
+
+  <!-- PANEL SECTION -->
+  <div class="panel-section">
+    <div class="panel-label">⚔️ Panel Legal &amp; Murah</div>
+    <p class="panel-sub">VaLz menyediakan panel hosting legal dengan harga terjangkau</p>
+    <div class="panel-grid">
+      <div class="panel-card">
+        <div class="panel-icon">💾</div>
+        <div class="panel-ram">5 GB</div>
+        <div class="panel-price">Rp 3.000</div>
+        <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%205GB" target="_blank">Beli</a>
+      </div>
+      <div class="panel-card popular">
+        <div class="panel-badge">Populer</div>
+        <div class="panel-icon">💾</div>
+        <div class="panel-ram">6 GB</div>
+        <div class="panel-price">Rp 4.000</div>
+        <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%206GB" target="_blank">Beli</a>
+      </div>
+      <div class="panel-card">
+        <div class="panel-icon">💾</div>
+        <div class="panel-ram">10 GB</div>
+        <div class="panel-price">Rp 5.000</div>
+        <a class="panel-btn" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%2010GB" target="_blank">Beli</a>
+      </div>
+      <div class="panel-card gold">
+        <div class="panel-icon">♾️</div>
+        <div class="panel-ram">Unlimited</div>
+        <div class="panel-price">Rp 8.000</div>
+        <a class="panel-btn btn-gold" href="https://wa.me/6283185947823?text=Halo%20VaLz%20mau%20beli%20panel%20Unlimited" target="_blank">Beli</a>
       </div>
     </div>
   </div>
 
-  <div class="music-panel">
-    <div class="music-now">
-      <div class="music-icon" id="musicIcon">🎵</div>
-      <div class="music-info">
-        <div class="music-title" id="musicTitle">Killswitch Lullaby</div>
-        <div class="music-subtitle" id="musicSubtitle">Flawed Mangoes — 124 BPM, E Minor</div>
-      </div>
-    </div>
-    <div class="music-controls">
-      <button class="music-btn" id="playPause" title="Play/Pause">▶️</button>
-      <input type="range" class="music-volume" id="volumeSlider" min="0" max="100" value="30">
-    </div>
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Cari bot..." oninput="filterBots()"/>
   </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Semua</button>
+    <button class="filter-btn" onclick="setFilter('multi-device',this)">Multi Device</button>
+    <button class="filter-btn" onclick="setFilter('javascript',this)">JavaScript</button>
+    <button class="filter-btn" onclick="setFilter('typescript',this)">TypeScript</button>
+    <button class="filter-btn" onclick="setFilter('new',this)">Terbaru</button>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid"></div>
 </div>
 
-<div class="menu" id="menu">
-  <button data-game="guess" class="active">🔢 Tebak Angka</button>
-  <button data-game="rps">✊ Suit</button>
-  <button data-game="ttt">⭕ Tic Tac Toe</button>
-  <button data-game="memory">🧠 Memory</button>
-  <button data-game="quiz">❓ Kuis</button>
-  <button data-game="dice">🎲 Dadu</button>
-  <button data-game="color">🎨 Tebak Warna</button>
-  <button data-game="simon">🔵 Simon Says</button>
-  <button data-game="click">⚡ Klik Cepat</button>
-  <button data-game="hangman">📝 Hangman</button>
-  <button data-game="leaderboard">🏆 Leaderboard</button>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Link disalin!</div>
 
-<div class="game-container">
-
-  <div id="guess" class="game active">
-    <h2>🔢 Tebak Angka</h2>
-    <p class="info">Saya memilih angka antara 1-100. Coba tebak! (Skor = 100 - percobaan×5)</p>
-    <div class="guess-input">
-      <input type="number" id="guessInput" placeholder="1-100" min="1" max="100">
-      <button class="btn" id="guessBtn">Tebak!</button>
-    </div>
-    <div id="guessResult"></div>
-    <div id="guessHistory"></div>
-    <div style="text-align:center; margin-top:15px;">
-      <button class="btn" id="resetGuessBtn">🔄 Main Lagi</button>
-    </div>
-  </div>
-
-  <div id="rps" class="game">
-    <h2>✊ Batu Gunting Kertas</h2>
-    <p class="info">Pilih senjata kamu! Menang 3x untuk dapat skor.</p>
-    <div class="rps-choices">
-      <button class="rps-btn" data-rps="batu">✊</button>
-      <button class="rps-btn" data-rps="gunting">✌️</button>
-      <button class="rps-btn" data-rps="kertas">✋</button>
-    </div>
-    <div class="rps-result" id="rpsResult">Pilih salah satu untuk mulai!</div>
-    <div class="rps-score">
-      <div>👤 Kamu: <span id="playerScore">0</span></div>
-      <div>🤖 Komputer: <span id="cpuScore">0</span></div>
-      <div>🤝 Seri: <span id="tieScore">0</span></div>
-    </div>
-    <div style="text-align:center; margin-top:15px;">
-      <button class="btn" id="resetRpsBtn">🔄 Reset Skor</button>
-    </div>
-  </div>
-
-  <div id="ttt" class="game">
-    <h2>⭕ Tic Tac Toe</h2>
-    <p class="info">Kamu (X) vs Komputer (O). Menang = 100 poin!</p>
-    <div class="ttt-status" id="tttStatus">Giliran kamu (X)</div>
-    <div class="ttt-board" id="tttBoard"></div>
-    <div style="text-align:center;">
-      <button class="btn" id="resetTTTBtn">🔄 Main Lagi</button>
-    </div>
-  </div>
-
-  <div id="memory" class="game">
-    <h2>🧠 Memory Match</h2>
-    <p class="info">Cocokkan pasangan kartu! Skor = 1000 - langkah×10</p>
-    <div class="memory-info">
-      Langkah: <span id="moves">0</span> | Pasangan: <span id="pairs">0</span>/8
-    </div>
-    <div class="memory-board" id="memoryBoard"></div>
-    <div style="text-align:center; margin-top:15px;">
-      <button class="btn" id="resetMemoryBtn">🔄 Main Lagi</button>
-    </div>
-  </div>
-
-  <div id="quiz" class="game">
-    <h2>❓ Kuis Pengetahuan</h2>
-    <div class="game-info">Skor: <span id="quizScore">0</span> | Soal: <span id="quizNum">1</span>/5</div>
-    <div class="quiz-question" id="quizQuestion">Memuat...</div>
-    <div class="quiz-options" id="quizOptions"></div>
-    <div style="text-align:center;">
-      <button class="btn" id="resetQuizBtn">🔄 Ulangi Kuis</button>
-    </div>
-  </div>
-
-  <div id="dice" class="game">
-    <h2>🎲 Simulasi Dadu</h2>
-    <p class="info">Lempar dadu 5 kali. Skor = total nilai dadu!</p>
-    <div class="dice-display" id="diceDisplay">⚀</div>
-    <div class="game-info">Total Nilai: <span id="diceTotal">0</span> | Lemparan: <span id="diceCount">0</span>/5</div>
-    <div style="text-align:center; margin-top:20px;">
-      <button class="btn" id="rollDiceBtn">🎲 Lempar Dadu</button>
-      <button class="btn btn-secondary" id="resetDiceBtn">🔄 Reset</button>
-    </div>
-  </div>
-
-  <div id="color" class="game">
-    <h2>🎨 Tebak Warna</h2>
-    <p class="info">Pilih nama warna yang sesuai dengan kotak di atas!</p>
-    <div class="color-box" id="colorBox"></div>
-    <div class="color-options" id="colorOptions"></div>
-    <div class="game-info">Skor: <span id="colorScore">0</span> | Nyawa: <span id="colorLives">3</span></div>
-    <div style="text-align:center;">
-      <button class="btn" id="resetColorBtn">🔄 Main Lagi</button>
-    </div>
-  </div>
-
-  <div id="simon" class="game">
-    <h2>🔵 Simon Says</h2>
-    <p class="info">Ikuti urutan warna! Skor = level yang dicapai × 10.</p>
-    <div class="game-info">Level: <span id="simonLevel">0</span> | Skor: <span id="simonScore">0</span></div>
-    <div class="simon-board">
-      <button class="simon-btn simon-green" data-color="green"></button>
-      <button class="simon-btn simon-red" data-color="red"></button>
-      <button class="simon-btn simon-yellow" data-color="yellow"></button>
-      <button class="simon-btn simon-blue" data-color="blue"></button>
-    </div>
-    <div style="text-align:center;">
-      <button class="btn" id="startSimonBtn">▶️ Mulai</button>
-    </div>
-  </div>
-
-  <div id="click" class="game">
-    <h2>⚡ Klik Cepat</h2>
-    <p class="info">Klik target sebanyak mungkin dalam 30 detik!</p>
-    <div class="game-info">Skor: <span id="clickScore">0</span> | Waktu: <span id="clickTime">30</span>s</div>
-    <div class="click-area" id="clickArea"></div>
-    <div style="text-align:center; margin-top:15px;">
-      <button class="btn" id="startClickBtn">▶️ Mulai</button>
-    </div>
-  </div>
-
-  <div id="hangman" class="game">
-    <h2>📝 Hangman</h2>
-    <p class="info">Tebak kata! Sisa nyawa × 20 = skor.</p>
-    <div class="hangman-info">Nyawa: <span id="hangmanLives">❤️❤️❤️❤️❤️❤️</span></div>
-    <div class="hangman-word" id="hangmanWord"></div>
-    <div class="hangman-info">Kesempatan: <span id="hangmanTries">6</span>/6</div>
-    <div class="hangman-letters" id="hangmanLetters"></div>
-    <div style="text-align:center; margin-top:15px;">
-      <button class="btn" id="resetHangmanBtn">🔄 Main Lagi</button>
-    </div>
-  </div>
-
-  <div id="leaderboard" class="game">
-    <h2>🏆 Leaderboard</h2>
-    <p class="info">Peringkat skor terbaik dari semua game!</p>
-    <div class="leaderboard-tabs" id="lbTabs">
-      <button class="lb-tab active" data-lb="all">🌍 Semua</button>
-      <button class="lb-tab" data-lb="guess">🔢 Tebak Angka</button>
-      <button class="lb-tab" data-lb="rps">✊ Suit</button>
-      <button class="lb-tab" data-lb="ttt">⭕ Tic Tac Toe</button>
-      <button class="lb-tab" data-lb="memory">🧠 Memory</button>
-      <button class="lb-tab" data-lb="quiz">❓ Kuis</button>
-      <button class="lb-tab" data-lb="dice">🎲 Dadu</button>
-      <button class="lb-tab" data-lb="color">🎨 Warna</button>
-      <button class="lb-tab" data-lb="simon">🔵 Simon</button>
-      <button class="lb-tab" data-lb="click">⚡ Klik Cepat</button>
-      <button class="lb-tab" data-lb="hangman">📝 Hangman</button>
-    </div>
-    <div class="lb-table-wrapper">
-      <table class="lb-table">
-        <thead>
-          <tr>
-            <th class="lb-rank">#</th>
-            <th>Nama</th>
-            <th>Game</th>
-            <th>Skor</th>
-            <th>Tanggal</th>
-          </tr>
-        </thead>
-        <tbody id="lbBody">
-          <tr><td colspan="5" class="lb-empty">Belum ada skor tersimpan. Mainkan game dulu! 🎮</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="lb-actions">
-      <button class="btn btn-secondary" id="clearLB">🗑️ Hapus Semua Skor</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- ============ FOOTER ============ -->
-<footer class="site-footer">
-  <div class="footer-developer">
-    👨‍💻 Dibuat oleh <span class="dev-name-big">VaLz</span>
-  </div>
-  <a href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank" rel="noopener" class="footer-wa">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    📢 Join Saluran WhatsApp VaLz
-  </a>
-  <div class="footer-copy">
-    © 2024 Game Zone by VaLz — Semua Hak Dilindungi
-  </div>
+<!-- FOOTER -->
+<footer>
+  © 2026 <a href="https://wa.me/6283185947823">VaLz</a> · valz.my.id · All bots are free to use
 </footer>
 
-<!-- ============ FLOATING WA BUTTON ============ -->
-<a href="https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y" target="_blank" rel="noopener" class="wa-float" title="Join Saluran WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h3>🎉 Skor Baru!</h3>
-    <p id="modalGame">Game: -</p>
-    <div class="score-display" id="modalScore">0</div>
-    <p>Masukkan nama kamu untuk menyimpan ke leaderboard:</p>
-    <input type="text" id="modalName" placeholder="Nama kamu" maxlength="15" autocomplete="off">
-    <div class="modal-buttons">
-      <button class="btn btn-secondary" id="modalSkip">Lewati</button>
-      <button class="btn" id="modalSave">💾 Simpan</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="profileModalOverlay">
-  <div class="modal">
-    <h3>✏️ Edit Profile</h3>
-    <p>Pilih avatar & ubah nama kamu</p>
-    <div class="avatar-picker" id="avatarPicker">
-      <button class="avatar-option" data-avatar="😎">😎</button>
-      <button class="avatar-option" data-avatar="🐱">🐱</button>
-      <button class="avatar-option" data-avatar="🐶">🐶</button>
-      <button class="avatar-option" data-avatar="🦊">🦊</button>
-      <button class="avatar-option" data-avatar="🐼">🐼</button>
-      <button class="avatar-option" data-avatar="🦁">🦁</button>
-      <button class="avatar-option" data-avatar="🐸">🐸</button>
-      <button class="avatar-option" data-avatar="🐵">🐵</button>
-      <button class="avatar-option" data-avatar="🦄">🦄</button>
-      <button class="avatar-option" data-avatar="🐲">🐲</button>
-      <button class="avatar-option" data-avatar="👽">👽</button>
-      <button class="avatar-option" data-avatar="🤖">🤖</button>
-      <button class="avatar-option" data-avatar="👻">👻</button>
-      <button class="avatar-option" data-avatar="🎃">🎃</button>
-      <button class="avatar-option" data-avatar="⭐">⭐</button>
-      <button class="avatar-option" data-avatar="🔥">🔥</button>
-    </div>
-    <input type="text" id="profileNameInput" placeholder="Nama kamu" maxlength="20">
-    <div class="modal-buttons">
-      <button class="btn btn-secondary" id="profileCancel">Batal</button>
-      <button class="btn" id="profileSave">💾 Simpan</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// ==========================================
-// TEMA
-// ==========================================
-const themeToggle = document.getElementById('themeToggle');
-let currentTheme = localStorage.getItem('gamezone-theme') || 'light';
-
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-  localStorage.setItem('gamezone-theme', theme);
-  currentTheme = theme;
-}
-
-themeToggle.addEventListener('click', () => {
-  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-});
-
-applyTheme(currentTheme);
-
-// ==========================================
-// MUSIK - KILLSWITCH LULLABY
-// ==========================================
-let audioCtx = null;
-let musicPlaying = false;
-let musicTimer = null;
-let volume = 0.3;
-
-const killswitchMelody = [
-  [261.63, 0.48], [329.63, 0.48], [392.00, 0.48], [493.88, 0.48],
-  [523.25, 0.48], [493.88, 0.48], [392.00, 0.48], [329.63, 0.48],
-  [329.63, 0.48], [392.00, 0.48], [493.88, 0.48], [392.00, 0.48],
-  [329.63, 0.48], [293.66, 0.48], [261.63, 0.48], [293.66, 0.48],
-  [293.66, 0.48], [369.99, 0.48], [440.00, 0.48], [369.99, 0.48],
-  [293.66, 0.48], [261.63, 0.48], [246.94, 0.48], [261.63, 0.48],
-  [261.63, 0.48], [329.63, 0.48], [392.00, 0.48], [493.88, 0.48],
-  [523.25, 0.48], [493.88, 0.48], [392.00, 0.48], [329.63, 0.48],
-  [329.63, 0.48], [392.00, 0.48], [493.88, 0.48], [392.00, 0.48],
-  [329.63, 0.48], [293.66, 0.48], [261.63, 0.48], [293.66, 0.48],
-  [293.66, 0.48], [369.99, 0.48], [440.00, 0.48], [369.99, 0.48],
-  [293.66, 0.48], [261.63, 0.48], [246.94, 0.48], [261.63, 0.48],
-  [261.63, 0.72], [329.63, 0.72], [392.00, 0.72], [523.25, 0.96]
+const BOTS = [
+  {
+    name: 'FURINA',
+    version: 'v18',
+    desc: '6000+ FITUR',
+    icon: '🤖', iconBg: 'rgba(192,57,43,0.08)',
+    tags: ['free','multi-device','javascript'],
+    link: 'https://www.mediafire.com/file/v5lsdmzej7iu32m/FURINA+V18+6488+FEATURE.zip/file', isNew: true, isHot: false
+  },
+  {
+    name: 'VaLz MD',
+    version: 'COMINGSOON',
+    desc: 'Bot multi-device berbasis Baileys. Ringan, cepat, dan stabil untuk 24/7.',
+    icon: '⚡', iconBg: 'rgba(107,47,160,0.08)',
+    tags: ['free','multi-device','javascript'],
+    link: '#', isNew: false, isHot: true
+  },
+  {
+    name: 'SilFord Bot',
+    version: 'v1.3.0',
+    desc: 'Bot WA dengan sistem plugin modular. Mudah dikembangkan dan di-custom.',
+    icon: '🧩', iconBg: 'rgba(212,160,23,0.08)',
+    tags: ['free','multi-device','typescript'],
+    link: '#', isNew: true, isHot: false
+  },
+  {
+    name: 'NightBot WA',
+    version: 'v0.9.5',
+    desc: 'Bot dark-themed dengan AI reply otomatis dan fitur antisales & antispam.',
+    icon: '🌙', iconBg: 'rgba(107,47,160,0.08)',
+    tags: ['free','javascript'],
+    link: '#', isNew: false, isHot: false
+  },
 ];
 
-function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-}
+let currentFilter = 'all';
 
-function playNote(freq, duration, time) {
-  if (!audioCtx) return;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'triangle';
-  osc.frequency.setValueAtTime(freq, time);
-  gain.gain.setValueAtTime(0, time);
-  gain.gain.linearRampToValueAtTime(volume * 0.25, time + 0.05);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start(time);
-  osc.stop(time + duration);
-}
-
-function playKillswitchLullaby() {
-  if (!audioCtx) return;
-  let totalTime = 0;
-  const now = audioCtx.currentTime + 0.1;
-  killswitchMelody.forEach(([freq, dur]) => { totalTime += dur + 0.05; });
-  let offset = 0;
-  killswitchMelody.forEach(([freq, dur]) => {
-    playNote(freq, dur, now + offset);
-    offset += dur + 0.05;
-  });
-  musicTimer = setTimeout(() => {
-    if (musicPlaying) playKillswitchLullaby();
-  }, totalTime * 1000);
-}
-
-function startMusic() {
-  initAudio();
-  musicPlaying = true;
-  document.getElementById('musicToggle').textContent = '🔊';
-  document.getElementById('musicToggle').classList.add('playing');
-  document.getElementById('musicIcon').style.animation = 'spin 3s linear infinite';
-  document.getElementById('playPause').textContent = '⏸️';
-  document.getElementById('musicTitle').textContent = 'Killswitch Lullaby';
-  document.getElementById('musicSubtitle').textContent = 'Flawed Mangoes — 124 BPM, E Minor';
-  playKillswitchLullaby();
-}
-
-function stopMusic() {
-  musicPlaying = false;
-  clearTimeout(musicTimer);
-  document.getElementById('musicToggle').textContent = '🔇';
-  document.getElementById('musicToggle').classList.remove('playing');
-  document.getElementById('musicIcon').style.animation = 'none';
-  document.getElementById('playPause').textContent = '▶️';
-}
-
-document.getElementById('musicToggle').addEventListener('click', () => {
-  if (musicPlaying) stopMusic(); else startMusic();
-});
-document.getElementById('playPause').addEventListener('click', () => {
-  if (musicPlaying) stopMusic(); else startMusic();
-});
-document.getElementById('volumeSlider').addEventListener('input', (e) => {
-  volume = e.target.value / 100;
-});
-
-// ==========================================
-// PROFILE
-// ==========================================
-const PROFILE_KEY = 'gamezone-profile';
-
-function getProfile() {
-  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}'); }
-  catch { return {}; }
-}
-
-function saveProfile(profile) {
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-}
-
-function renderProfile() {
-  const p = getProfile();
-  const name = p.name || 'Pemain Baru';
-  const avatar = p.avatar || '😎';
-  document.getElementById('profileName').textContent = name;
-  document.getElementById('profileAvatar').textContent = avatar;
-  document.getElementById('modalName').value = name === 'Pemain Baru' ? '' : name;
-
-  const lb = getLeaderboard();
-  const myScores = lb.filter(x => x.name === name);
-  document.getElementById('statGames').textContent = myScores.length;
-  document.getElementById('statBest').textContent = myScores.length > 0
-    ? Math.max(...myScores.map(s => s.score)) : 0;
-  document.getElementById('statTotal').textContent = myScores.reduce((a, b) => a + b.score, 0);
-
-  if (p.joined) {
-    document.getElementById('profileSubtitle').textContent = 'Bergabung: ' + p.joined;
-  } else {
-    const today = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-    p.joined = today;
-    if (!p.name) p.name = 'Pemain Baru';
-    if (!p.avatar) p.avatar = '😎';
-    saveProfile(p);
-    document.getElementById('profileSubtitle').textContent = 'Bergabung: ' + today;
-  }
-}
-
-document.getElementById('editProfileBtn').addEventListener('click', () => {
-  const p = getProfile();
-  document.getElementById('profileNameInput').value = p.name || 'Pemain Baru';
-  document.querySelectorAll('.avatar-option').forEach(a => {
-    a.classList.toggle('selected', a.dataset.avatar === (p.avatar || '😎'));
-  });
-  document.getElementById('profileModalOverlay').classList.add('active');
-});
-
-document.getElementById('profileAvatar').addEventListener('click', () => {
-  document.getElementById('editProfileBtn').click();
-});
-
-document.getElementById('avatarPicker').addEventListener('click', (e) => {
-  const av = e.target.closest('.avatar-option');
-  if (!av) return;
-  document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
-  av.classList.add('selected');
-});
-
-document.getElementById('profileSave').addEventListener('click', () => {
-  const name = document.getElementById('profileNameInput').value.trim() || 'Pemain Baru';
-  const selected = document.querySelector('.avatar-option.selected');
-  const avatar = selected ? selected.dataset.avatar : '😎';
-  const p = getProfile();
-  p.name = name;
-  p.avatar = avatar;
-  saveProfile(p);
-  document.getElementById('profileModalOverlay').classList.remove('active');
-  renderProfile();
-  renderLeaderboard(currentLbFilter);
-  showToast(`✅ Profile disimpan: ${name}`);
-});
-
-document.getElementById('profileCancel').addEventListener('click', () => {
-  document.getElementById('profileModalOverlay').classList.remove('active');
-});
-
-// ==========================================
-// NAVIGASI MENU
-// ==========================================
-document.getElementById('menu').addEventListener('click', function(e) {
-  const btn = e.target.closest('button');
-  if (!btn || !btn.dataset.game) return;
-  const id = btn.dataset.game;
-  document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
-  document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-  const target = document.getElementById(id);
-  if (target) {
-    target.classList.add('active');
-    btn.classList.add('active');
-    if (id === 'leaderboard') renderLeaderboard(currentLbFilter);
-  }
-});
-
-// ==========================================
-// LEADERBOARD
-// ==========================================
-const LB_KEY = 'gamezone-leaderboard';
-let currentLbFilter = 'all';
-
-const gameNames = {
-  guess: '🔢 Tebak Angka', rps: '✊ Suit', ttt: '⭕ Tic Tac Toe',
-  memory: '🧠 Memory', quiz: '❓ Kuis', dice: '🎲 Dadu',
-  color: '🎨 Warna', simon: '🔵 Simon', click: '⚡ Klik Cepat',
-  hangman: '📝 Hangman'
-};
-
-function getLeaderboard() {
-  try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]'); }
-  catch { return []; }
-}
-
-function saveLeaderboard(data) {
-  localStorage.setItem(LB_KEY, JSON.stringify(data));
-}
-
-function submitScore(gameKey, score) {
-  if (score <= 0) return;
-  const p = getProfile();
-  const overlay = document.getElementById('modalOverlay');
-  document.getElementById('modalGame').textContent = 'Game: ' + (gameNames[gameKey] || gameKey);
-  document.getElementById('modalScore').textContent = score;
-  const nameInput = document.getElementById('modalName');
-  const defaultName = p.name && p.name !== 'Pemain Baru' ? p.name : (localStorage.getItem('gamezone-lastname') || '');
-  nameInput.value = defaultName;
-  overlay.classList.add('active');
-  setTimeout(() => nameInput.focus(), 100);
-
-  const saveHandler = () => {
-    const name = (nameInput.value.trim() || 'Anonim').slice(0, 15);
-    localStorage.setItem('gamezone-lastname', name);
-    const prof = getProfile();
-    if (!prof.name || prof.name === 'Pemain Baru') {
-      prof.name = name;
-      saveProfile(prof);
-    }
-    const lb = getLeaderboard();
-    lb.push({
-      name, game: gameKey, gameName: gameNames[gameKey] || gameKey, score,
-      date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: '2-digit' })
-    });
-    saveLeaderboard(lb);
-    overlay.classList.remove('active');
-    cleanup();
-    renderProfile();
-    showToast(`✅ Skor ${score} tersimpan untuk ${name}!`);
-  };
-
-  const skipHandler = () => {
-    overlay.classList.remove('active');
-    cleanup();
-  };
-
-  const keyHandler = (e) => {
-    if (e.key === 'Enter') saveHandler();
-    if (e.key === 'Escape') skipHandler();
-  };
-
-  function cleanup() {
-    document.getElementById('modalSave').removeEventListener('click', saveHandler);
-    document.getElementById('modalSkip').removeEventListener('click', skipHandler);
-    nameInput.removeEventListener('keypress', keyHandler);
-  }
-
-  document.getElementById('modalSave').addEventListener('click', saveHandler);
-  document.getElementById('modalSkip').addEventListener('click', skipHandler);
-  nameInput.addEventListener('keypress', keyHandler);
-}
-
-function renderLeaderboard(filter = 'all') {
-  currentLbFilter = filter;
-  const lb = getLeaderboard();
-  document.querySelectorAll('.lb-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.lb === filter);
-  });
-  const filtered = filter === 'all' ? lb : lb.filter(x => x.game === filter);
-  const sorted = [...filtered].sort((a, b) => b.score - a.score).slice(0, 50);
-  const tbody = document.getElementById('lbBody');
-  if (sorted.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="lb-empty">
-      ${filter === 'all' ? 'Belum ada skor tersimpan. Mainkan game dulu! 🎮' : 'Belum ada skor untuk game ini.'}
-    </td></tr>`;
-    return;
-  }
-  tbody.innerHTML = sorted.map((entry, i) => {
-    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-    return `
-      <tr>
-        <td class="lb-rank ${rankClass}">${medal}</td>
-        <td>${escapeHtml(entry.name)}</td>
-        <td>${entry.gameName || entry.game}</td>
-        <td class="lb-score">${entry.score}</td>
-        <td>${entry.date}</td>
-      </tr>
-    `;
-  }).join('');
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-document.getElementById('lbTabs').addEventListener('click', e => {
-  const tab = e.target.closest('.lb-tab');
-  if (!tab) return;
-  renderLeaderboard(tab.dataset.lb);
-});
-
-document.getElementById('clearLB').addEventListener('click', () => {
-  if (confirm('Yakin hapus semua skor leaderboard?')) {
-    localStorage.removeItem(LB_KEY);
-    renderLeaderboard(currentLbFilter);
-    renderProfile();
-    showToast('🗑️ Leaderboard dihapus!');
-  }
-});
-
-function showToast(msg) {
-  const toast = document.createElement('div');
-  toast.textContent = msg;
-  toast.style.cssText = `
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-    background: var(--primary); color: white; padding: 12px 25px;
-    border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    font-weight: bold; z-index: 300; animation: fadeIn 0.3s;
-    max-width: 90%; text-align: center;
-  `;
-  document.body.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.4s';
-    setTimeout(() => toast.remove(), 400);
-  }, 2200);
-}
-
-// =========================
-// GAME 1: TEBAK ANGKA
-// =========================
-let secretNumber = Math.floor(Math.random() * 100) + 1;
-let attempts = [];
-let guessGameFinished = false;
-
-function checkGuess() {
-  if (guessGameFinished) return;
-  const input = document.getElementById('guessInput');
-  const result = document.getElementById('guessResult');
-  const history = document.getElementById('guessHistory');
-  const guess = parseInt(input.value);
-  if (!guess || guess < 1 || guess > 100) {
-    result.textContent = '⚠️ Masukkan angka 1-100!';
-    result.style.color = '#f44336';
-    return;
-  }
-  attempts.push(guess);
-  if (guess === secretNumber) {
-    const score = Math.max(100 - (attempts.length - 1) * 5, 10);
-    result.textContent = `🎉 Benar! Angkanya ${secretNumber}! (${attempts.length} percobaan) | Skor: ${score}`;
-    result.style.color = '#4caf50';
-    input.disabled = true;
-    guessGameFinished = true;
-    submitScore('guess', score);
-  } else if (guess < secretNumber) {
-    result.textContent = '📈 Terlalu KECIL!';
-    result.style.color = '#ff9800';
-  } else {
-    result.textContent = '📉 Terlalu BESAR!';
-    result.style.color = '#ff9800';
-  }
-  history.textContent = 'Riwayat: ' + attempts.join(', ');
-  input.value = '';
-  input.focus();
-}
-
-function resetGuess() {
-  secretNumber = Math.floor(Math.random() * 100) + 1;
-  attempts = [];
-  guessGameFinished = false;
-  document.getElementById('guessResult').textContent = '';
-  document.getElementById('guessHistory').textContent = '';
-  const input = document.getElementById('guessInput');
-  input.disabled = false;
-  input.value = '';
-  input.focus();
-}
-
-document.getElementById('guessBtn').addEventListener('click', checkGuess);
-document.getElementById('resetGuessBtn').addEventListener('click', resetGuess);
-document.getElementById('guessInput').addEventListener('keypress', e => {
-  if (e.key === 'Enter') checkGuess();
-});
-
-// =========================
-// GAME 2: SUIT
-// =========================
-let playerScore = 0, cpuScore = 0, tieScore = 0;
-let rpsSubmitted = false;
-const emojiRPS = { batu: '✊', gunting: '✌️', kertas: '✋' };
-
-function playRPS(player) {
-  const choices = ['batu', 'gunting', 'kertas'];
-  const cpu = choices[Math.floor(Math.random() * 3)];
-  const result = document.getElementById('rpsResult');
-  let outcome;
-  if (player === cpu) {
-    outcome = 'seri'; tieScore++;
-  } else if (
-    (player === 'batu' && cpu === 'gunting') ||
-    (player === 'gunting' && cpu === 'kertas') ||
-    (player === 'kertas' && cpu === 'batu')
-  ) {
-    outcome = 'menang'; playerScore++;
-  } else {
-    outcome = 'kalah'; cpuScore++;
-  }
-  const msg = outcome === 'menang' ? '🎉 Kamu MENANG!' :
-              outcome === 'kalah' ? '😢 Kamu KALAH!' : '🤝 SERI!';
-  result.innerHTML = `
-    Kamu: ${emojiRPS[player]} vs Komputer: ${emojiRPS[cpu]}<br>
-    <span style="color:${outcome === 'menang' ? '#4caf50' : outcome === 'kalah' ? '#f44336' : '#ff9800'}">${msg}</span>
-  `;
-  document.getElementById('playerScore').textContent = playerScore;
-  document.getElementById('cpuScore').textContent = cpuScore;
-  document.getElementById('tieScore').textContent = tieScore;
-  if (!rpsSubmitted && (playerScore >= 3 || cpuScore >= 3)) {
-    rpsSubmitted = true;
-    const finalScore = playerScore * 100 - cpuScore * 50;
-    setTimeout(() => {
-      submitScore('rps', Math.max(finalScore, 0));
-      showToast(`🏁 Selesai! Kamu ${playerScore} - ${cpuScore} Komputer`);
-    }, 800);
-  }
-}
-
-document.querySelectorAll('.rps-btn').forEach(btn => {
-  btn.addEventListener('click', () => playRPS(btn.dataset.rps));
-});
-
-document.getElementById('resetRpsBtn').addEventListener('click', () => {
-  playerScore = 0; cpuScore = 0; tieScore = 0;
-  rpsSubmitted = false;
-  document.getElementById('playerScore').textContent = '0';
-  document.getElementById('cpuScore').textContent = '0';
-  document.getElementById('tieScore').textContent = '0';
-  document.getElementById('rpsResult').textContent = 'Pilih salah satu untuk mulai!';
-});
-
-// =========================
-// GAME 3: TIC TAC TOE
-// =========================
-let tttBoard = ['', '', '', '', '', '', '', '', ''];
-let tttGameOver = false;
-
-function initTTT() {
-  const board = document.getElementById('tttBoard');
-  board.innerHTML = '';
-  tttBoard.forEach((_, i) => {
-    const cell = document.createElement('button');
-    cell.className = 'ttt-cell';
-    cell.dataset.index = i;
-    cell.addEventListener('click', () => playerMove(i));
-    board.appendChild(cell);
+function renderBots(list) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  document.getElementById('total-bots').textContent = BOTS.length;
+  if (!list.length) { grid.innerHTML = '<div class="empty">😶 Tidak ada bot yang ditemukan.</div>'; return; }
+  const tagMap = { free:'tag-free','multi-device':'tag-md',javascript:'tag-js',typescript:'tag-ts' };
+  list.forEach(bot => {
+    const tags = bot.tags.map(t => `<span class="tag ${tagMap[t]||'tag-free'}">${t}</span>`).join('');
+    const extras = (bot.isNew?'<span class="tag tag-new">✦ new</span>':'')+(bot.isHot?'<span class="tag tag-hot">🔥 hot</span>':'');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-icon" style="background:${bot.iconBg}">${bot.icon}</div>
+        <div class="card-meta">
+          <div class="card-name">${bot.name}</div>
+          <div class="card-version">ver ${bot.version}</div>
+        </div>
+      </div>
+      <div class="card-desc">${bot.desc}</div>
+      <div class="card-tags">${tags}${extras}</div>
+      <div class="card-footer">
+        <a class="btn-dl" href="${bot.link}" target="_blank">⬇ Download</a>
+        <button class="btn-copy" onclick="copyLink('${bot.link}')">🔗</button>
+      </div>`;
+    grid.appendChild(card);
   });
 }
 
-function playerMove(i) {
-  if (tttBoard[i] || tttGameOver) return;
-  tttBoard[i] = 'X';
-  renderTTT();
-  if (checkWinner('X')) {
-    document.getElementById('tttStatus').textContent = '🎉 Kamu MENANG! +100 poin';
-    tttGameOver = true;
-    submitScore('ttt', 100);
-    return;
-  }
-  if (tttBoard.every(c => c)) {
-    document.getElementById('tttStatus').textContent = '🤝 Seri! +30 poin';
-    tttGameOver = true;
-    submitScore('ttt', 30);
-    return;
-  }
-  document.getElementById('tttStatus').textContent = 'Komputer berpikir...';
-  setTimeout(cpuMove, 500);
+function filterBots() {
+  const q = document.getElementById('search').value.toLowerCase();
+  renderBots(BOTS.filter(b => {
+    const mf = currentFilter==='all'||b.tags.includes(currentFilter)||(currentFilter==='new'&&b.isNew);
+    const ms = b.name.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q)||b.tags.some(t=>t.includes(q));
+    return mf && ms;
+  }));
 }
 
-function cpuMove() {
-  if (tttGameOver) return;
-  let move = findBestMove('O');
-  if (move === -1) move = findBestMove('X');
-  if (move === -1 && !tttBoard[4]) move = 4;
-  if (move === -1) {
-    const empty = tttBoard.map((v, i) => v === '' ? i : null).filter(v => v !== null);
-    move = empty[Math.floor(Math.random() * empty.length)];
-  }
-  tttBoard[move] = 'O';
-  renderTTT();
-  if (checkWinner('O')) {
-    document.getElementById('tttStatus').textContent = '😢 Komputer MENANG!';
-    tttGameOver = true;
-    return;
-  }
-  if (tttBoard.every(c => c)) {
-    document.getElementById('tttStatus').textContent = '🤝 Seri! +30 poin';
-    tttGameOver = true;
-    submitScore('ttt', 30);
-    return;
-  }
-  document.getElementById('tttStatus').textContent = 'Giliran kamu (X)';
-}
-
-function findBestMove(player) {
-  const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  for (let w of wins) {
-    const vals = w.map(i => tttBoard[i]);
-    if (vals.filter(v => v === player).length === 2 && vals.includes('')) {
-      return w[vals.indexOf('')];
-    }
-  }
-  return -1;
-}
-
-function checkWinner(p) {
-  const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  return wins.some(w => w.every(i => tttBoard[i] === p));
-}
-
-function renderTTT() {
-  document.querySelectorAll('.ttt-cell').forEach((cell, i) => {
-    cell.textContent = tttBoard[i];
-    cell.disabled = !!tttBoard[i];
-    cell.style.color = tttBoard[i] === 'X' ? 'var(--primary)' : '#ff5722';
-  });
-}
-
-function resetTTT() {
-  tttBoard = ['', '', '', '', '', '', '', '', ''];
-  tttGameOver = false;
-  document.getElementById('tttStatus').textContent = 'Giliran kamu (X)';
-  renderTTT();
-}
-
-document.getElementById('resetTTTBtn').addEventListener('click', resetTTT);
-
-// =========================
-// GAME 4: MEMORY
-// =========================
-const memoryEmojis = ['🍎','🍌','🍇','🍓','🍒','🍑','🥝','🍍'];
-let memoryCards = [];
-let memoryFlipped = [];
-let memoryMatched = 0;
-let memoryMoves = 0;
-let memoryLock = false;
-
-function initMemory() {
-  memoryCards = [...memoryEmojis, ...memoryEmojis]
-    .sort(() => Math.random() - 0.5)
-    .map((emoji, i) => ({ emoji, id: i, matched: false }));
-  memoryFlipped = [];
-  memoryMatched = 0;
-  memoryMoves = 0;
-  memoryLock = false;
-  document.getElementById('moves').textContent = '0';
-  document.getElementById('pairs').textContent = '0';
-  renderMemory();
-}
-
-function renderMemory() {
-  const board = document.getElementById('memoryBoard');
-  board.innerHTML = '';
-  memoryCards.forEach((card, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'memory-card';
-    btn.dataset.index = i;
-    btn.textContent = card.matched || memoryFlipped.includes(i) ? card.emoji : '?';
-    if (card.matched) btn.classList.add('matched');
-    if (memoryFlipped.includes(i)) btn.classList.add('flipped');
-    btn.addEventListener('click', () => flipMemory(i));
-    board.appendChild(btn);
-  });
-}
-
-function flipMemory(i) {
-  if (memoryLock) return;
-  if (memoryFlipped.includes(i)) return;
-  if (memoryCards[i].matched) return;
-  if (memoryFlipped.length >= 2) return;
-  memoryFlipped.push(i);
-  renderMemory();
-  if (memoryFlipped.length === 2) {
-    memoryMoves++;
-    document.getElementById('moves').textContent = memoryMoves;
-    memoryLock = true;
-    const [a, b] = memoryFlipped;
-    if (memoryCards[a].emoji === memoryCards[b].emoji) {
-      memoryCards[a].matched = true;
-      memoryCards[b].matched = true;
-      memoryMatched++;
-      document.getElementById('pairs').textContent = memoryMatched;
-      memoryFlipped = [];
-      memoryLock = false;
-      renderMemory();
-      if (memoryMatched === 8) {
-        const score = Math.max(1000 - memoryMoves * 10, 100);
-        setTimeout(() => {
-          alert(`🎉 Selamat! Kamu menang dalam ${memoryMoves} langkah!\nSkor: ${score}`);
-          submitScore('memory', score);
-        }, 300);
-      }
-    } else {
-      setTimeout(() => {
-        memoryFlipped = [];
-        memoryLock = false;
-        renderMemory();
-      }, 800);
-    }
-  }
-}
-
-document.getElementById('resetMemoryBtn').addEventListener('click', initMemory);
-
-// =========================
-// GAME 5: KUIS
-// =========================
-const quizData = [
-  { q: 'Ibu kota Indonesia adalah?', o: ['Jakarta', 'Bandung', 'Surabaya', 'Medan'], a: 0 },
-  { q: 'Planet terbesar di tata surya?', o: ['Mars', 'Jupiter', 'Saturnus', 'Bumi'], a: 1 },
-  { q: 'Berapa hasil 7 × 8?', o: ['54', '56', '48', '64'], a: 1 },
-  { q: 'Siapa penemu lampu pijar?', o: ['Einstein', 'Newton', 'Edison', 'Tesla'], a: 2 },
-  { q: 'Hewan tercepat di darat?', o: ['Cheetah', 'Singa', 'Kuda', 'Rusa'], a: 0 },
-  { q: 'Berapa jumlah provinsi Indonesia (2024)?', o: ['34', '36', '38', '40'], a: 2 },
-  { q: 'Bahasa pemrograman untuk web?', o: ['Python', 'JavaScript', 'Java', 'C++'], a: 1 },
-  { q: 'Air membeku pada suhu?', o: ['0°C', '10°C', '-10°C', '5°C'], a: 0 },
-];
-
-let quizQuestions = [];
-let quizIndex = 0;
-let quizScore = 0;
-let quizAnswered = false;
-
-function initQuiz() {
-  quizQuestions = [...quizData].sort(() => Math.random() - 0.5).slice(0, 5);
-  quizIndex = 0;
-  quizScore = 0;
-  quizAnswered = false;
-  document.getElementById('quizScore').textContent = '0';
-  loadQuizQuestion();
-}
-
-function loadQuizQuestion() {
-  if (quizIndex >= quizQuestions.length) {
-    document.getElementById('quizQuestion').textContent =
-      `🏆 Kuis selesai! Skor akhir: ${quizScore}/${quizQuestions.length}`;
-    document.getElementById('quizOptions').innerHTML = '';
-    document.getElementById('quizNum').textContent = quizQuestions.length;
-    const finalScore = quizScore * 20;
-    if (finalScore > 0) submitScore('quiz', finalScore);
-    return;
-  }
-  quizAnswered = false;
-  const q = quizQuestions[quizIndex];
-  document.getElementById('quizNum').textContent = quizIndex + 1;
-  document.getElementById('quizQuestion').textContent = q.q;
-  const opts = document.getElementById('quizOptions');
-  opts.innerHTML = '';
-  q.o.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'quiz-option';
-    btn.textContent = opt;
-    btn.addEventListener('click', () => answerQuiz(i, btn));
-    opts.appendChild(btn);
-  });
-}
-
-function answerQuiz(i, btn) {
-  if (quizAnswered) return;
-  quizAnswered = true;
-  const correct = quizQuestions[quizIndex].a;
-  const allBtns = document.querySelectorAll('.quiz-option');
-  allBtns[correct].classList.add('correct');
-  if (i === correct) {
-    quizScore++;
-    document.getElementById('quizScore').textContent = quizScore;
-  } else {
-    btn.classList.add('wrong');
-  }
-  setTimeout(() => { quizIndex++; loadQuizQuestion(); }, 1200);
-}
-
-document.getElementById('resetQuizBtn').addEventListener('click', initQuiz);
-
-// =========================
-// GAME 6: DADU
-// =========================
-const diceEmojis = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-let diceTotal = 0;
-let diceCount = 0;
-let isRolling = false;
-
-function rollDice() {
-  if (isRolling) return;
-  if (diceCount >= 5) {
-    showToast('🎲 Sudah 5 lemparan! Klik Reset untuk main lagi.');
-    return;
-  }
-  isRolling = true;
-  const display = document.getElementById('diceDisplay');
-  display.classList.add('rolling');
-  let count = 0;
-  const interval = setInterval(() => {
-    display.textContent = diceEmojis[Math.floor(Math.random() * 6)];
-    count++;
-    if (count > 10) {
-      clearInterval(interval);
-      const result = Math.floor(Math.random() * 6) + 1;
-      display.textContent = diceEmojis[result - 1];
-      display.classList.remove('rolling');
-      diceTotal += result;
-      diceCount++;
-      document.getElementById('diceTotal').textContent = diceTotal;
-      document.getElementById('diceCount').textContent = diceCount;
-      isRolling = false;
-      if (diceCount === 5) {
-        setTimeout(() => {
-          submitScore('dice', diceTotal);
-          showToast(`🎲 Selesai! Total: ${diceTotal}`);
-        }, 500);
-      }
-    }
-  }, 50);
-}
-
-function resetDice() {
-  diceTotal = 0;
-  diceCount = 0;
-  document.getElementById('diceTotal').textContent = '0';
-  document.getElementById('diceCount').textContent = '0';
-  document.getElementById('diceDisplay').textContent = '⚀';
-}
-
-document.getElementById('rollDiceBtn').addEventListener('click', rollDice);
-document.getElementById('resetDiceBtn').addEventListener('click', resetDice);
-
-// =========================
-// GAME 7: TEBAK WARNA
-// =========================
-const colorList = [
-  { name: 'Merah', hex: '#f44336' }, { name: 'Biru', hex: '#2196f3' },
-  { name: 'Hijau', hex: '#4caf50' }, { name: 'Kuning', hex: '#ffeb3b' },
-  { name: 'Ungu', hex: '#9c27b0' }, { name: 'Oranye', hex: '#ff9800' },
-  { name: 'Merah Muda', hex: '#e91e63' }, { name: 'Cyan', hex: '#00bcd4' },
-  { name: 'Coklat', hex: '#795548' }, { name: 'Abu-abu', hex: '#607d8b' },
-];
-
-let colorScore = 0;
-let colorLives = 3;
-let currentColor = null;
-
-function initColorGame() {
-  colorScore = 0;
-  colorLives = 3;
-  document.getElementById('colorScore').textContent = '0';
-  document.getElementById('colorLives').textContent = '3';
-  nextColorQuestion();
-}
-
-function nextColorQuestion() {
-  if (colorLives <= 0) {
-    document.getElementById('colorBox').style.background = '#ccc';
-    document.getElementById('colorOptions').innerHTML =
-      `<div style="grid-column: 1/-1; text-align:center; font-size:1.3rem; font-weight:bold; color:#f44336;">💀 Game Over! Skor: ${colorScore}</div>`;
-    if (colorScore > 0) submitScore('color', colorScore * 10);
-    return;
-  }
-  const shuffled = [...colorList].sort(() => Math.random() - 0.5);
-  const options = shuffled.slice(0, 4);
-  currentColor = options[Math.floor(Math.random() * 4)];
-  document.getElementById('colorBox').style.background = currentColor.hex;
-  const opts = document.getElementById('colorOptions');
-  opts.innerHTML = '';
-  options.sort(() => Math.random() - 0.5).forEach(color => {
-    const btn = document.createElement('button');
-    btn.className = 'color-option';
-    btn.textContent = color.name;
-    btn.addEventListener('click', () => checkColor(color.name, btn));
-    opts.appendChild(btn);
-  });
-}
-
-function checkColor(name, btn) {
-  if (name === currentColor.name) {
-    btn.classList.add('correct');
-    colorScore++;
-    document.getElementById('colorScore').textContent = colorScore;
-    setTimeout(nextColorQuestion, 600);
-  } else {
-    btn.classList.add('wrong');
-    colorLives--;
-    document.getElementById('colorLives').textContent = colorLives;
-    setTimeout(nextColorQuestion, 800);
-  }
-}
-
-document.getElementById('resetColorBtn').addEventListener('click', initColorGame);
-
-// =========================
-// GAME 8: SIMON SAYS
-// =========================
-const simonColors = ['green', 'red', 'yellow', 'blue'];
-let simonSequence = [];
-let simonPlayerIndex = 0;
-let simonScore = 0;
-let simonLevel = 0;
-let simonPlaying = false;
-
-function startSimon() {
-  simonSequence = [];
-  simonScore = 0;
-  simonLevel = 0;
-  document.getElementById('simonScore').textContent = '0';
-  document.getElementById('simonLevel').textContent = '0';
-  nextSimonRound();
-}
-
-function nextSimonRound() {
-  simonPlayerIndex = 0;
-  simonLevel++;
-  document.getElementById('simonLevel').textContent = simonLevel;
-  simonSequence.push(simonColors[Math.floor(Math.random() * 4)]);
-  playSimonSequence();
-}
-
-function playSimonSequence() {
-  simonPlaying = true;
-  setSimonButtonsDisabled(true);
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i >= simonSequence.length) {
-      clearInterval(interval);
-      simonPlaying = false;
-      setSimonButtonsDisabled(false);
-      return;
-    }
-    flashSimon(simonSequence[i]);
-    i++;
-  }, 700);
-}
-
-function flashSimon(color) {
-  const btn = document.querySelector(`.simon-btn[data-color="${color}"]`);
-  if (!btn) return;
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  setTimeout(() => btn.classList.remove('active'), 400);
+  filterBots();
 }
 
-function simonClick(color) {
-  if (simonPlaying) return;
-  if (simonSequence.length === 0) return;
-  flashSimon(color);
-  if (color === simonSequence[simonPlayerIndex]) {
-    simonPlayerIndex++;
-    if (simonPlayerIndex === simonSequence.length) {
-      simonScore++;
-      document.getElementById('simonScore').textContent = simonScore;
-      setTimeout(nextSimonRound, 800);
-    }
-  } else {
-    const finalScore = simonScore * 10;
-    alert(`💀 Salah! Skor akhir: ${simonScore} (Level ${simonLevel})`);
-    if (finalScore > 0) submitScore('simon', finalScore);
-    simonPlaying = false;
-    setSimonButtonsDisabled(true);
-    document.getElementById('simonLevel').textContent = '0';
-    document.getElementById('simonScore').textContent = '0';
-    simonSequence = [];
-  }
-}
-
-function setSimonButtonsDisabled(disabled) {
-  document.querySelectorAll('.simon-btn').forEach(b => b.disabled = disabled);
-}
-
-document.querySelectorAll('.simon-btn').forEach(btn => {
-  btn.addEventListener('click', () => simonClick(btn.dataset.color));
-});
-document.getElementById('startSimonBtn').addEventListener('click', startSimon);
-
-// =========================
-// GAME 9: KLIK CEPAT
-// =========================
-let clickScore = 0;
-let clickTimeLeft = 30;
-let clickTimer = null;
-let clickGameRunning = false;
-
-function startClickGame() {
-  clickScore = 0;
-  clickTimeLeft = 30;
-  clickGameRunning = true;
-  document.getElementById('clickScore').textContent = '0';
-  document.getElementById('clickTime').textContent = '30';
-  const area = document.getElementById('clickArea');
-  area.innerHTML = '';
-  spawnTarget();
-  clearInterval(clickTimer);
-  clickTimer = setInterval(() => {
-    clickTimeLeft--;
-    document.getElementById('clickTime').textContent = clickTimeLeft;
-    if (clickTimeLeft <= 0) endClickGame();
-  }, 1000);
-}
-
-function spawnTarget() {
-  const area = document.getElementById('clickArea');
-  area.innerHTML = '';
-  if (!clickGameRunning) return;
-  const target = document.createElement('div');
-  target.className = 'click-target';
-  target.textContent = '🎯';
-  const maxX = Math.max(area.clientWidth - 60, 10);
-  const maxY = Math.max(area.clientHeight - 60, 10);
-  target.style.left = Math.random() * maxX + 'px';
-  target.style.top = Math.random() * maxY + 'px';
-  target.addEventListener('click', () => {
-    clickScore++;
-    document.getElementById('clickScore').textContent = clickScore;
-    spawnTarget();
+function copyLink(link) {
+  navigator.clipboard.writeText(link).then(() => {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2000);
   });
-  area.appendChild(target);
-  setTimeout(() => {
-    if (target.parentNode && clickGameRunning) spawnTarget();
-  }, 1500);
 }
 
-function endClickGame() {
-  clickGameRunning = false;
-  clearInterval(clickTimer);
-  const area = document.getElementById('clickArea');
-  area.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.5rem; font-weight:bold; color:var(--primary);">⏰ Waktu habis! Skor: ${clickScore}</div>`;
-  if (clickScore > 0) submitScore('click', clickScore * 5);
-}
-
-document.getElementById('startClickBtn').addEventListener('click', startClickGame);
-
-// =========================
-// GAME 10: HANGMAN
-// =========================
-const hangmanWords = [
-  { word: 'KOMPUTER', hint: 'Alat elektronik' },
-  { word: 'JAKARTA', hint: 'Ibu kota' },
-  { word: 'GAJAH', hint: 'Hewan besar' },
-  { word: 'PISANG', hint: 'Buah kuning' },
-  { word: 'SEKOLAH', hint: 'Tempat belajar' },
-  { word: 'MATAHARI', hint: 'Bintang di langit' },
-  { word: 'PELANGI', hint: 'Muncul setelah hujan' },
-  { word: 'BUKU', hint: 'Alat baca' },
-  { word: 'KUCING', hint: 'Hewan berbulu' },
-  { word: 'MOBIL', hint: 'Kendaraan beroda 4' },
-];
-
-let hangmanWord = '';
-let hangmanGuessed = [];
-let hangmanTries = 6;
-let hangmanFinished = false;
-
-function initHangman() {
-  const data = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
-  hangmanWord = data.word;
-  hangmanGuessed = [];
-  hangmanTries = 6;
-  hangmanFinished = false;
-  document.getElementById('hangmanTries').textContent = hangmanTries;
-  document.getElementById('hangmanLives').textContent = '❤️'.repeat(6);
-  renderHangman();
-  renderHangmanLetters();
-}
-
-function renderHangman() {
-  document.getElementById('hangmanWord').textContent = hangmanWord.split('').map(l =>
-    hangmanGuessed.includes(l) ? l : '_'
-  ).join(' ');
-}
-
-function renderHangmanLetters() {
-  const container = document.getElementById('hangmanLetters');
-  container.innerHTML = '';
-  for (let i = 65; i <= 90; i++) {
-    const letter = String.fromCharCode(i);
-    const btn = document.createElement('button');
-    btn.className = 'letter-btn';
-    btn.textContent = letter;
-    btn.dataset.letter = letter;
-    if (hangmanGuessed.includes(letter)) {
-      btn.disabled = true;
-      if (hangmanWord.includes(letter)) btn.classList.add('correct');
-      else btn.classList.add('wrong');
-    }
-    btn.addEventListener('click', () => guessLetter(letter, btn));
-    container.appendChild(btn);
-  }
-}
-
-function guessLetter(letter, btn) {
-  if (hangmanFinished) return;
-  if (hangmanGuessed.includes(letter)) return;
-  hangmanGuessed.push(letter);
-  if (hangmanWord.includes(letter)) {
-    btn.classList.add('correct');
-  } else {
-    btn.classList.add('wrong');
-    hangmanTries--;
-    document.getElementById('hangmanTries').textContent = hangmanTries;
-    document.getElementById('hangmanLives').textContent = '❤️'.repeat(Math.max(hangmanTries, 0));
-  }
-  btn.disabled = true;
-  renderHangman();
-  const won = hangmanWord.split('').every(l => hangmanGuessed.includes(l));
-  if (won) {
-    hangmanFinished = true;
-    const score = hangmanTries * 20;
-    setTimeout(() => {
-      alert(`🎉 Selamat! Kamu menang! Kata: ${hangmanWord}\nSkor: ${score}`);
-      submitScore('hangman', score);
-    }, 300);
-    disableAllLetters();
-    return;
-  }
-  if (hangmanTries <= 0) {
-    hangmanFinished = true;
-    setTimeout(() => alert(`💀 Game Over! Kata yang benar: ${hangmanWord}`), 300);
-    disableAllLetters();
-  }
-}
-
-function disableAllLetters() {
-  document.querySelectorAll('.letter-btn').forEach(b => b.disabled = true);
-}
-
-document.getElementById('resetHangmanBtn').addEventListener('click', initHangman);
-
-// =========================
-// INISIALISASI
-// =========================
-initTTT();
-initMemory();
-initQuiz();
-initColorGame();
-initHangman();
-renderProfile();
-
-console.log('✅ Game Zone by VaLz siap!');
-console.log('📢 Join Saluran WhatsApp: https://whatsapp.com/channel/0029VbCtqnw7IUYPaC857e3Y');
+renderBots(BOTS);
 </script>
-
 </body>
 </html>
